@@ -30,7 +30,7 @@ namespace changes.Tests
 
             request = new APIGatewayProxyRequest();
             context = new TestLambdaContext();
-            response = functions.Get(request, context);
+            response = functions.GetChanges(request, context);
             Assert.Equal(200, response.StatusCode);
             Assert.Equal("Hello AWS Serverless", response.Body);
         }
