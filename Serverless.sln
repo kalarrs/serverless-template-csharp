@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "changes", "changes\src\chan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "changes.Tests", "changes\test\changes.Tests.csproj", "{84F7865B-973E-4269-9C9F-5E5100256BD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "changes.Local", "changes\local\changes.Local.csproj", "{413B189A-EF60-4A13-B2B6-F212A0541524}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{84F7865B-973E-4269-9C9F-5E5100256BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84F7865B-973E-4269-9C9F-5E5100256BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84F7865B-973E-4269-9C9F-5E5100256BD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{413B189A-EF60-4A13-B2B6-F212A0541524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{413B189A-EF60-4A13-B2B6-F212A0541524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{413B189A-EF60-4A13-B2B6-F212A0541524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{413B189A-EF60-4A13-B2B6-F212A0541524}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
