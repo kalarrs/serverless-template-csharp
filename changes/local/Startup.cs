@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace tmp
 {
@@ -22,13 +19,28 @@ namespace tmp
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddRouting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseMvc();
+            var routeBuilder = new RouteBuilder(app, new RouteHandler(context =>
+            {
+                var routeValues = context.GetRouteData().Values;
+                return context.Response.WriteAsync($"Hello! Route values: {string.Join(", ", routeValues)}");
+            }));
+            
+            // TODO : Could route to serverless in here. If done above it could be dynamic vs static.
+
+            routeBuilder.MapGet("hello/{name}", context =>
+            {
+                var name = context.GetRouteValue("name");
+                return context.Response.WriteAsync($"Hi, {name}!");
+            });
+            
+            var routes = routeBuilder.Build();
+            app.UseRouter(routes);
         }
     }
 }
