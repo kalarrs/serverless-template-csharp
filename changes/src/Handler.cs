@@ -60,7 +60,7 @@ namespace changes
                 var body = JsonConvert.DeserializeObject<PostChangeRequest>(request.Body);
                 if (body.Id == null) throw new JsonSerializationException("Id is required");
 
-                if (Changes.Any(c => c.Id == body.Id))
+                if (Changes.Any(c => c.Id == ObjectId.Parse(body.Id)))
                 {
                     return new APIGatewayProxyResponse
                     {
@@ -77,7 +77,7 @@ namespace changes
                     };
                 }
 
-                var change = new Change() {Id = body.Id.Value, Description = body.Description};
+                var change = new Change() {Id = ObjectId.Parse(body.Id), Description = body.Description};
 
                 Changes.Add(change);
 
@@ -123,7 +123,12 @@ namespace changes
             new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()};
 
         public static readonly Dictionary<string, string> DefaultHeaders =
-            new Dictionary<string, string> {{"Content-Type", "text/plain"}};
+            new Dictionary<string, string>
+            {
+                {"Content-Type", "application/json"},
+                {"Access-Control-Allow-Origin", "*"}, // Required for CORS support to work
+                {"Access-Control-Allow-Credentials", "true"},
+            };
         
         public class ObjectIdConverter : JsonConverter
         {
@@ -173,9 +178,9 @@ namespace changes
 
     public class PostChangeRequest
     {
-        [JsonProperty(Required = Required.Always)]
-        [JsonConverter(typeof(Util.ObjectIdConverter))]
-        public ObjectId? Id { get; set; }
+        //[JsonProperty(Required = Required.Always)]
+        //[JsonConverter(typeof(Util.ObjectIdConverter))]
+        public string Id { get; set; }
 
         [JsonProperty(Required = Required.Always)]
         public string Description { get; set; }
