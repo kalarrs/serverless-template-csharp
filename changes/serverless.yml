@@ -2,10 +2,10 @@ service: changes
 
 provider:
   name: aws
-  runtime: dotnetcore1.0
+  runtime: dotnetcore2.0
 
 package:
-  artifact: bin/release/netcoreapp1.0/deploy-package.zip
+  artifact: src/bin/release/netcoreapp2.0/deploy-package.zip
 #  exclude:
 #    - exclude-me.js
 #    - exclude-me-dir/**
@@ -13,7 +13,7 @@ package:
 functions:
   # list
   getChanges:
-    handler: CsharpHandlers::AwsDotnetCsharp.Handler::GetChanges
+    handler: CsharpHandlers::changes.Handler::GetChanges
     events:
       - http:
           method: get
@@ -22,7 +22,7 @@ functions:
           
   # create
   postChanges:
-    handler: CsharpHandlers::AwsDotnetCsharp.Handler::PostChanges
+    handler: CsharpHandlers::changes.Handler::PostChanges
     events:
       - http:
           method: post

@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.TestUtilities;
-using changes;
+using Kalarrs.Serverless.NetCore.Util;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,9 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YamlDotNet.Serialization;
 
-namespace tmp
+namespace Kalarrs.Sreverless.NetCore
 {
-    public class Startup
+    public class Startup<T> where T : new()
     {
         public Startup(IConfiguration configuration)
         {
@@ -27,13 +25,11 @@ namespace tmp
 
         public static IConfiguration Configuration { get; private set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRouting();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var routeBuilder = new RouteBuilder(app);
@@ -44,7 +40,6 @@ namespace tmp
             var yamlObject = deserializer.Deserialize(new StringReader(serverlessYaml));
 
 
-            //var routeRegex = new Regex(":(.*)?(/|$)");
             var routePrefixSuffixRegex = new Regex("(^/|/$)");
             var handlerRegex = new Regex(".*?\\.Handler::(.+)$");
             var httpEvents = new List<HttpEvent>();
@@ -77,7 +72,7 @@ namespace tmp
                 }
             }
 
-            var handler = new Handler();
+            var handler = new T();
             var handlerType = handler.GetType();
 
             foreach (var httpEvent in httpEvents)
@@ -141,36 +136,5 @@ namespace tmp
         public string Handler { get; set; }
         public string Method { get; set; }
         public string Path { get; set; }
-    }
-
-    public static class Util
-    {
-        public static async Task<APIGatewayProxyRequest> ToAPIGatewayProxyRequest(this HttpContext context, string resource)
-        {
-            var request = context.Request;
-            string body = null;
-            
-            if (request.Body != null) {
-                using (var reader = new StreamReader(request.Body, Encoding.UTF8))
-                {  
-                    body = await reader.ReadToEndAsync();
-                }
-            }
-
-            return new APIGatewayProxyRequest()
-            {
-                Resource = resource,
-                Path = request.Path,
-                HttpMethod = request.Method,
-                Headers = request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()),
-                QueryStringParameters = request.QueryString.ToString()
-                    .Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(p => p.Split("&")).ToDictionary(s => s[0], s => s[1]),
-                PathParameters = context.GetRouteData().Values.ToDictionary(p => p.Key, p => p.Value.ToString()),
-                StageVariables = null,
-                Body = body,
-                IsBase64Encoded = false
-            };
-        }
     }
 }

@@ -18,6 +18,7 @@
           </e>
         </e>
         <e p="Startup.cs" t="Include" />
+        <e p="Util.cs" t="Include" />
         <e p="web.config" t="Include" />
       </e>
       <e p="changes/serverless.yml" t="Include" />
