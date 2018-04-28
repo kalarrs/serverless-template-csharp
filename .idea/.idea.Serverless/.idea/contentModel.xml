@@ -17,9 +17,11 @@
             </e>
           </e>
         </e>
+        <e p="Serverless.cs" t="Include" />
         <e p="Startup.cs" t="Include" />
         <e p="Util.cs" t="Include" />
         <e p="web.config" t="Include" />
+        <e p="Yaml.cs" t="Include" />
       </e>
       <e p="changes/serverless.yml" t="Include" />
       <e p="changes/src" t="IncludeRecursive">
