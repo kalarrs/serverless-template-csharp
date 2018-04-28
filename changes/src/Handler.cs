@@ -83,15 +83,126 @@ namespace changes
 
                 return new APIGatewayProxyResponse
                 {
-                    StatusCode = (int) HttpStatusCode.Conflict,
+                    StatusCode = (int) HttpStatusCode.Created,
+                    Body = JsonConvert.SerializeObject(new ApiResponse<Change>
+                    {
+                        Data = change,
+                    }, Util.DefaultSerializerSettings),
+                    Headers = Util.DefaultHeaders
+                };
+            }
+            catch (Exception e)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = e is JsonSerializationException
+                        ? (int) HttpStatusCode.BadRequest
+                        : (int) HttpStatusCode.InternalServerError,
+
                     Body = JsonConvert.SerializeObject(new ApiResponse<ApiError>
                     {
                         Data = new ApiError
                         {
                             Type = ApiError.ErrorType.ApiError,
-                            Message = "A change with that Id already exits."
+                            Message = e.Message
                         }
                     }, Util.DefaultSerializerSettings),
+                    Headers = Util.DefaultHeaders
+                };
+            }
+        }
+        
+        public APIGatewayProxyResponse PutChange(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            context.Logger.LogLine("Put Change\n");
+
+            try
+            {
+                var body = JsonConvert.DeserializeObject<PostChangeRequest>(request.Body);
+                if (body.Id == null) throw new JsonSerializationException("Id is required");
+
+                var change = Changes.FirstOrDefault(c => c.Id == ObjectId.Parse(body.Id));
+                if (change == null)
+                {
+                    return new APIGatewayProxyResponse
+                    {
+                        StatusCode = (int) HttpStatusCode.NotFound,
+                        Body = JsonConvert.SerializeObject(new ApiResponse<ApiError>
+                        {
+                            Data = new ApiError
+                            {
+                                Type = ApiError.ErrorType.ApiError,
+                                Message = "Not Found"
+                            }
+                        }, Util.DefaultSerializerSettings),
+                        Headers = Util.DefaultHeaders
+                    };
+                }
+
+                change.Description = body.Description;
+
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = (int) HttpStatusCode.OK,
+                    Body = JsonConvert.SerializeObject(new ApiResponse<Change>
+                    {
+                        Data = change
+                    }, Util.DefaultSerializerSettings),
+                    Headers = Util.DefaultHeaders
+                };
+            }
+            catch (Exception e)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = e is JsonSerializationException
+                        ? (int) HttpStatusCode.BadRequest
+                        : (int) HttpStatusCode.InternalServerError,
+
+                    Body = JsonConvert.SerializeObject(new ApiResponse<ApiError>
+                    {
+                        Data = new ApiError
+                        {
+                            Type = ApiError.ErrorType.ApiError,
+                            Message = e.Message
+                        }
+                    }, Util.DefaultSerializerSettings),
+                    Headers = Util.DefaultHeaders
+                };
+            }
+        }
+        
+        public APIGatewayProxyResponse DeleteChange(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            context.Logger.LogLine("Delete Change\n");
+
+            try
+            {
+                if (!request.PathParameters.ContainsKey("changeId")) throw new JsonSerializationException("Id is required");
+
+                var change = Changes.FirstOrDefault(c => c.Id == ObjectId.Parse(request.PathParameters["changeId"]));
+                if (change == null)
+                {
+                    return new APIGatewayProxyResponse
+                    {
+                        StatusCode = (int) HttpStatusCode.NotFound,
+                        Body = JsonConvert.SerializeObject(new ApiResponse<ApiError>
+                        {
+                            Data = new ApiError
+                            {
+                                Type = ApiError.ErrorType.ApiError,
+                                Message = "Not Found"
+                            }
+                        }, Util.DefaultSerializerSettings),
+                        Headers = Util.DefaultHeaders
+                    };
+                }
+
+                Changes.Remove(change);
+
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = (int) HttpStatusCode.Accepted,
                     Headers = Util.DefaultHeaders
                 };
             }

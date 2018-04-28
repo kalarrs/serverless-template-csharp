@@ -55,7 +55,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                 var handlerMethod = handlerType.GetMethod(httpEvent.Handler);
                 if (handlerMethod == null) throw new Exception("The Method was not found!"); // TODO: Return a 500 with appropriate error.
 
-                var cb = HandleRoute(httpEvent, handlerMethod, handlerMethod);
+                var cb = HandleRoute(httpEvent, handlerMethod, handler);
                 
                 switch (httpEvent.Method)
                 {
@@ -95,7 +95,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                 }
 
                 context.Response.StatusCode = response.StatusCode;
-                await context.Response.WriteAsync(response.Body);
+                if (response.Body != null) await context.Response.WriteAsync(response.Body);
             };
         }
     }

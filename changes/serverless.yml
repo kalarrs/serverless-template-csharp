@@ -19,7 +19,7 @@ functions:
           method: get
           path: changes
           cors: true
-          
+
   # create
   postChanges:
     handler: CsharpHandlers::changes.Handler::PostChanges
@@ -28,6 +28,24 @@ functions:
           method: post
           path: changes
           cors: true
-          
+
+  # put
+  putChanges:
+    handler: CsharpHandlers::changes.Handler::PutChange
+    events:
+      - http:
+          method: put
+          path: changes/{changeId}
+          cors: true
+
+  # delete
+  deleteChanges:
+    handler: CsharpHandlers::changes.Handler::DeleteChange
+    events:
+      - http:
+          method: delete
+          path: changes/{changeId}
+          cors: true
+
 custom:
   user: ${file(../serverless.yml):custom.user}
