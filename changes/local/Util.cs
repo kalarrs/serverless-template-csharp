@@ -49,7 +49,7 @@ namespace Kalarrs.Serverless.NetCore.Util
             var handlerType = handler.GetType();
             
             
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("----");
             Console.ResetColor();
             foreach (var httpEvent in httpEvents)
@@ -60,11 +60,11 @@ namespace Kalarrs.Serverless.NetCore.Util
                 var handlerMethod = handlerType.GetMethod(httpEvent.Handler);
                 if (handlerMethod == null) throw new Exception("The Method was not found!"); // TODO: Return a 500 with appropriate error.
                 
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine($"{httpEvent.Handler}:");
                 Console.Write($" {httpEvent.Method} ");
                 Console.ResetColor();
-                Console.Write($" http://localhost:{port}/{httpEvent.PathToExpressRouteParameters()}\n");
+                Console.Write($"http://localhost:{port}/{httpEvent.PathToExpressRouteParameters()}\n");
 
                 var cb = HandleRoute(httpEvent, handlerMethod, handler);
                 
@@ -86,7 +86,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                         break;
                 }
             }
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("----");
             Console.ResetColor();
         }
