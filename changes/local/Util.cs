@@ -43,17 +43,28 @@ namespace Kalarrs.Serverless.NetCore.Util
             };
         }
 
-        public static void AddRoutes<T>(this IRouteBuilder routeBuilder, IEnumerable<HttpEvent> httpEvents) where T : new()
+        public static void AddRoutes<T>(this IRouteBuilder routeBuilder, IEnumerable<HttpEvent> httpEvents, string port) where T : new()
         {
             var handler = new T();
             var handlerType = handler.GetType();
             
+            
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("----");
+            Console.ResetColor();
             foreach (var httpEvent in httpEvents)
             {
                 // TODO : Options. If route has cors then return correct headers.
                 
+                
                 var handlerMethod = handlerType.GetMethod(httpEvent.Handler);
                 if (handlerMethod == null) throw new Exception("The Method was not found!"); // TODO: Return a 500 with appropriate error.
+                
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"{httpEvent.Handler}:");
+                Console.Write($" {httpEvent.Method} ");
+                Console.ResetColor();
+                Console.Write($" http://localhost:{port}/{httpEvent.PathToExpressRouteParameters()}\n");
 
                 var cb = HandleRoute(httpEvent, handlerMethod, handler);
                 
@@ -75,6 +86,9 @@ namespace Kalarrs.Serverless.NetCore.Util
                         break;
                 }
             }
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("----");
+            Console.ResetColor();
         }
 
         private static RequestDelegate HandleRoute<T>(HttpEvent httpEvent, MethodBase handlerMethod, T handler)

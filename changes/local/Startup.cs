@@ -28,7 +28,8 @@ namespace Kalarrs.Sreverless.NetCore
 
             var parser = new Parser();
             var httpEvents = parser.GetHttpEvents();
-            routeBuilder.AddRoutes<T>(httpEvents);
+            var port = parser.GetPort();
+            routeBuilder.AddRoutes<T>(httpEvents, port);
 
             var routes = routeBuilder.Build();
             app.UseRouter(routes);

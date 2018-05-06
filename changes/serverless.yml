@@ -49,3 +49,4 @@ functions:
 
 custom:
   user: ${file(../serverless.yml):custom.user}
+  localDevPort: 5005

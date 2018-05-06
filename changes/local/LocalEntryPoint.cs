@@ -1,6 +1,8 @@
-﻿using Kalarrs.Sreverless.NetCore;
+﻿using Kalarrs.Serverless.NetCore.Yaml;
+using Kalarrs.Sreverless.NetCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace changes.Local
 {
@@ -14,9 +16,21 @@ namespace changes.Local
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            var parser = new Parser();
+            var port = parser.GetPort();
+            
+            return WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((webhostContext, builder) =>
+                {
+                    builder.AddConfiguration(webhostContext.Configuration.GetSection("Logging"))
+                        .AddConsole()
+                        .AddDebug();
+                })
                 .UseStartup<Startup<Handler>>()
+                .UseUrls($"http://localhost:{port}")
                 .Build();
+        }
     }
 }
