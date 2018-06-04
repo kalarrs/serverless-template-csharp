@@ -15,7 +15,7 @@ using Newtonsoft.Json.Serialization;
 namespace changes
 {
     public class Handler
-    {
+    {   
         private List<Change> Changes = new List<Change>
         {
             new Change
