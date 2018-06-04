@@ -1,4 +1,4 @@
-service: changes
+service: mongo
 
 provider:
   name: aws
@@ -12,40 +12,40 @@ package:
 
 functions:
   # list
-  getChanges:
-    handler: CsharpHandlers::changes.Handler::GetChanges
+  getUserGroups:
+    handler: CsharpHandlers::changes.Handler::GetUserGroups
     events:
       - http:
           method: get
-          path: changes
+          path: user-groups
           cors: true
 
-  # create
-  postChanges:
-    handler: CsharpHandlers::changes.Handler::PostChanges
-    events:
-      - http:
-          method: post
-          path: changes
-          cors: true
-
-  # put
-  putChanges:
-    handler: CsharpHandlers::changes.Handler::PutChange
-    events:
-      - http:
-          method: put
-          path: changes/{changeId}
-          cors: true
-
-  # delete
-  deleteChanges:
-    handler: CsharpHandlers::changes.Handler::DeleteChange
-    events:
-      - http:
-          method: delete
-          path: changes/{changeId}
-          cors: true
+#  # create
+#  postChanges:
+#    handler: CsharpHandlers::changes.Handler::PostChanges
+#    events:
+#      - http:
+#          method: post
+#          path: changes
+#          cors: true
+#
+#  # put
+#  putChanges:
+#    handler: CsharpHandlers::changes.Handler::PutChange
+#    events:
+#      - http:
+#          method: put
+#          path: changes/{changeId}
+#          cors: true
+#
+#  # delete
+#  deleteChanges:
+#    handler: CsharpHandlers::changes.Handler::DeleteChange
+#    events:
+#      - http:
+#          method: delete
+#          path: changes/{changeId}
+#          cors: true
 
 custom:
   user: ${file(../serverless.yml):custom.user}

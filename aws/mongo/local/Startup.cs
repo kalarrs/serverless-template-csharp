@@ -1,4 +1,5 @@
-﻿using Kalarrs.Serverless.NetCore.Util;
+﻿using System;
+using Kalarrs.Serverless.NetCore.Util;
 using Kalarrs.Serverless.NetCore.Yaml;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,10 @@ namespace Kalarrs.Sreverless.NetCore
             var routeBuilder = new RouteBuilder(app);
 
             var parser = new Parser();
+            
+            // TODO: parser.GetEnvironmentVariables();
+            Environment.SetEnvironmentVariable("MONGODB_URI", "<uri>");
+            
             var httpEvents = parser.GetHttpEvents();
             var port = parser.GetPort();
             routeBuilder.AddRoutes<T>(httpEvents, port);

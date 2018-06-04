@@ -1,60 +1,54 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using Amazon.Lambda.Core;
+using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
-using Newtonsoft.Json;
+using Amazon.Lambda.Core;
+using mongo.models;
 using MongoDB.Bson;
+using MongoDB.Driver;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
-namespace changes
+namespace mongo
 {
     public class Handler
-    {   
-        private List<Change> Changes = new List<Change>
-        {
-            new Change
-            {
-                Id = new ObjectId("5a1b5ae36758c40453e5e024"),
-                Description = "This is an example"
-            },
-            new Change
-            {
-                Id = new ObjectId("5a1b5b176758c40453e5e025"),
-                Description = "of a simple mock API"
-            }
-        };
-
-
+    {
+        public static MongoClient client = new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI"));
+        public static IMongoDatabase database = client.GetDatabase("kalarrs");
+        public static IMongoCollection<UserGroup> collection = database.GetCollection<UserGroup>("userGroups");
+        
         /// <summary>
-        /// A Lambda function to respond to HTTP Get /api/changes
+        /// A Lambda function to respond to HTTP Get /api/user-groups
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>The list changes</returns>
-        public APIGatewayProxyResponse GetChanges(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>A list of userGroups</returns>
+        public async Task<APIGatewayProxyResponse> GetUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogLine("Get Changes\n");
+            var x = Environment.GetEnvironmentVariable("MONGODB_URI");
+            
+            var userGroups = await collection.AsQueryable().ToListAsync().ConfigureAwait(false);
 
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int) HttpStatusCode.OK,
-                Body = JsonConvert.SerializeObject(new ApiResponse<List<Change>>
+                Body = JsonConvert.SerializeObject(new ApiResponse<List<UserGroup>>
                 {
-                    Data = Changes
+                    Data = userGroups
                 }, Util.DefaultSerializerSettings),
                 Headers = Util.DefaultHeaders
             };
         }
 
+        /*
         public APIGatewayProxyResponse PostChanges(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Post Changes\n");
-
+            
             try
             {
                 var body = JsonConvert.DeserializeObject<PostChangeRequest>(request.Body);
@@ -111,7 +105,7 @@ namespace changes
                 };
             }
         }
-        
+
         public APIGatewayProxyResponse PutChange(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Put Change\n");
@@ -171,14 +165,15 @@ namespace changes
                 };
             }
         }
-        
+
         public APIGatewayProxyResponse DeleteChange(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Delete Change\n");
 
             try
             {
-                if (!request.PathParameters.ContainsKey("changeId")) throw new JsonSerializationException("Id is required");
+                if (!request.PathParameters.ContainsKey("changeId"))
+                    throw new JsonSerializationException("Id is required");
 
                 var change = Changes.FirstOrDefault(c => c.Id == ObjectId.Parse(request.PathParameters["changeId"]));
                 if (change == null)
@@ -226,6 +221,7 @@ namespace changes
                 };
             }
         }
+        */
     }
 
     public static class Util
@@ -240,7 +236,7 @@ namespace changes
                 {"Access-Control-Allow-Origin", "*"}, // Required for CORS support to work
                 {"Access-Control-Allow-Credentials", "true"},
             };
-        
+
         public class ObjectIdConverter : JsonConverter
         {
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

@@ -43,7 +43,7 @@ namespace Kalarrs.Serverless.NetCore.Util
             };
         }
 
-        public static void AddRoutes<T>(this IRouteBuilder routeBuilder, IEnumerable<HttpEvent> httpEvents, string port) where T : new()
+        public static async void AddRoutes<T>(this IRouteBuilder routeBuilder, IEnumerable<HttpEvent> httpEvents, string port) where T : new()
         {
             var handler = new T();
             var handlerType = handler.GetType();
@@ -66,7 +66,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                 Console.ResetColor();
                 Console.Write($"http://localhost:{port}/{httpEvent.PathToExpressRouteParameters()}\n");
 
-                var cb = HandleRoute(httpEvent, handlerMethod, handler);
+                var cb = await HandleRoute(httpEvent, handlerMethod, handler);
                 
                 switch (httpEvent.Method)
                 {
@@ -91,14 +91,18 @@ namespace Kalarrs.Serverless.NetCore.Util
             Console.ResetColor();
         }
 
-        private static RequestDelegate HandleRoute<T>(HttpEvent httpEvent, MethodBase handlerMethod, T handler)
+        private static async Task<RequestDelegate> HandleRoute<T>(HttpEvent httpEvent, MethodBase handlerMethod, T handler)
         {
             return async (context) =>
             {
+                APIGatewayProxyResponse response;
                 var apiGatewayProxyRequest = await context.ToAPIGatewayProxyRequest(httpEvent.Path);
 
-                if (!(handlerMethod.Invoke(handler, new object[] {apiGatewayProxyRequest, new TestLambdaContext()}) is APIGatewayProxyResponse response)) 
-                    throw new Exception("The Method did not send a response.");
+                var handlerResponse = handlerMethod.Invoke(handler, new object[] {apiGatewayProxyRequest, new TestLambdaContext()});
+                
+                if (handlerResponse is Task<APIGatewayProxyResponse> task) response = await task;
+                else if (handlerResponse is APIGatewayProxyResponse proxyResponse) response = proxyResponse;
+                else throw new Exception("The Method did not return an APIGatewayProxyResponse.");
 
                 if (response.Headers.Any())
                 {
