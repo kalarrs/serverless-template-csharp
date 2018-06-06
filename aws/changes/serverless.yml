@@ -1,14 +1,21 @@
-service: changes
+service: "change-name"
+
+plugins:
+ - "@kalarrs/serverless-project-utils"
 
 provider:
   name: aws
   runtime: dotnetcore2.0
+  profile: ${file(../serverless.yml):provider.profile}
+  region: ${file(../serverless.yml):provider.region}
+  stage: ${file(../serverless.yml):provider.stage}
+  apiGatewayRestApiName: ${file(../serverless.yml):provider.apiGatewayRestApiName}
+  
+  environment:
+    CHANGE_VALUE: ${env:CHANGE_VALUE, file(../serverless.yml):provider.environment.CHANGE_VALUE}
 
 package:
   artifact: src/bin/release/netcoreapp2.0/deploy-package.zip
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
 
 functions:
   # list

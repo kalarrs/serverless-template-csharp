@@ -15,6 +15,9 @@
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\package.json">
+      <Link>package.json</Link>
+    </Content>
     <Content Include="..\serverless.yml">
       <Link>serverless.yml</Link>
     </Content>

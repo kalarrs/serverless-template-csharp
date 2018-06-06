@@ -16,6 +16,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mongo.Local", "mongo\local\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mongo.Tests", "mongo\test\mongo.Tests.csproj", "{0EA2B49C-74A3-4F92-93FE-0D684934AC0D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aws", "aws", "{C84AE16B-FCD2-4E22-9495-7F98E29B634C}"
+ProjectSection(SolutionItems) = preProject
+	serverless-user.yml = serverless-user.yml
+	serverless.yml = serverless.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".env", ".env", "{D2EF7783-C384-415F-BB1D-217CF58F8A48}"
+ProjectSection(SolutionItems) = preProject
+	.env\dev.yml = .env\dev.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
