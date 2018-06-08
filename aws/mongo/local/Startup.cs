@@ -1,6 +1,6 @@
 ﻿using System;
+using Kalarrs.Serverless.NetCore.Core;
 using Kalarrs.Serverless.NetCore.Util;
-using Kalarrs.Serverless.NetCore.Yaml;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -26,14 +26,13 @@ namespace Kalarrs.Sreverless.NetCore
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             var routeBuilder = new RouteBuilder(app);
+            var serverlessProject = new ServerlessProject();
 
-            var parser = new Parser();
+            var environmentVariables = serverlessProject.GetEnvironmentVariables();
+            foreach (var keyValuePair in environmentVariables) Environment.SetEnvironmentVariable(keyValuePair.Key, keyValuePair.Value.ToString());                    
             
-            // TODO: parser.GetEnvironmentVariables();
-            Environment.SetEnvironmentVariable("MONGODB_URI", "<uri>");
-            
-            var httpEvents = parser.GetHttpEvents();
-            var port = parser.GetPort();
+            var httpEvents = serverlessProject.GetHttpEvents();
+            var port = serverlessProject.GetPort();
             routeBuilder.AddRoutes<T>(httpEvents, port);
 
             var routes = routeBuilder.Build();

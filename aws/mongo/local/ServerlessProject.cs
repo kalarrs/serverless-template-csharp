@@ -1,40 +1,65 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using Kalarrs.Sreverless.NetCore;
+using Newtonsoft.Json.Linq;
 using YamlDotNet.Serialization;
 
-namespace Kalarrs.Serverless.NetCore.Yaml
+namespace Kalarrs.Serverless.NetCore.Core
 {
-    public class Parser
+    public class ServerlessProject
     {
         private readonly string _path;
-        private readonly object _yaml;
+        private readonly object _serverlessYaml;
+        private readonly JObject _environmentJson;
 
         private static readonly Regex RoutePrefixSuffixRegex = new Regex("(^/|/$)");
         private static readonly Regex HandlerRegex = new Regex(".*?\\.Handler::(.+)$");
 
         private const string DefaultPort = "5000";
-
-        public Parser(string path = "../serverless.yml")
+        
+        public ServerlessProject(string path = null)
         {
-            _path = path;
-            _yaml = ReadYaml();
+            _path = path ?? Directory.GetParent(Directory.GetCurrentDirectory()).FullName;;
+            Export();
+            
+            _serverlessYaml = ReadServerlessYaml();
+            _environmentJson = ReadEnvironmentJson();
         }
 
-        private object ReadYaml()
+        private object ReadServerlessYaml()
         {
-            var serverlessYaml = File.ReadAllText(_path);
+            var serverlessYaml = File.ReadAllText($"{_path}/serverless.yml");
 
             var deserializer = new Deserializer();
             return deserializer.Deserialize(new StringReader(serverlessYaml));
+        }
+
+        private JObject ReadEnvironmentJson()
+        {
+            var environmentJson = File.ReadAllText($"{_path}/.serverless/environment.json");
+            return JObject.Parse(environmentJson);
+        }
+
+        public Dictionary<string, string> GetEnvironmentVariables()
+        {
+            /*
+            var environmentVariables = new Dictionary<string, string>();
+            foreach (var keyValuePair in _environmentJson)
+            {
+                environmentVariables.Add(keyValuePair.Key, keyValuePair.Value.ToString());                    
+            }
+            return environmentVariables;
+            */
+            return _environmentJson.ToObject<Dictionary<string, string>>();
         }
 
         public IEnumerable<HttpEvent> GetHttpEvents()
         {
             var httpEvents = new List<HttpEvent>();
 
-            var functions = (_yaml as Dictionary<object, object>)?["functions"];
+            var functions = (_serverlessYaml as Dictionary<object, object>)?["functions"];
             if (functions == null) return httpEvents;
 
             foreach (var function in (Dictionary<object, object>) functions)
@@ -66,7 +91,7 @@ namespace Kalarrs.Serverless.NetCore.Yaml
 
         public string GetPort()
         {
-            var yamlDictonary = (Dictionary<object, object>) _yaml;
+            var yamlDictonary = (Dictionary<object, object>) _serverlessYaml;
             if (yamlDictonary == null || !yamlDictonary.ContainsKey("custom")) return DefaultPort;
 
             var custom = yamlDictonary["custom"];
@@ -74,6 +99,23 @@ namespace Kalarrs.Serverless.NetCore.Yaml
             if (localDevPortDictonary == null || !localDevPortDictonary.ContainsKey("localDevPort")) return DefaultPort;
 
             return localDevPortDictonary["localDevPort"].ToString() ?? DefaultPort;
+        }
+
+        private void Export()
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"sls export\"",
+                    WorkingDirectory = _path,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+            process.WaitForExit();
         }
     }
 }

@@ -68,10 +68,10 @@
             </e>
           </e>
           <e p="Serverless.cs" t="Include" />
+          <e p="ServerlessProject.cs" t="Include" />
           <e p="Startup.cs" t="Include" />
           <e p="Util.cs" t="Include" />
           <e p="web.config" t="Include" />
-          <e p="Yaml.cs" t="Include" />
         </e>
         <e p="package.json" t="Include" />
         <e p="serverless.yml" t="Include" />
@@ -79,6 +79,13 @@
           <e p="bin" t="ExcludeRecursive" />
           <e p="Handler.cs" t="Include" />
           <e p="models" t="Include">
+            <e p="mongo" t="Include">
+              <e p="MongoUser.cs" t="Include" />
+              <e p="MongoUserGroup.cs" t="Include" />
+            </e>
+            <e p="requests" t="Include">
+              <e p="UserGroupCreateRequest.cs" t="Include" />
+            </e>
             <e p="UserGroup.cs" t="Include" />
           </e>
           <e p="mongo.csproj" t="IncludeRecursive" />

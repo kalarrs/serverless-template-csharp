@@ -1,4 +1,4 @@
-﻿using Kalarrs.Serverless.NetCore.Yaml;
+﻿using Kalarrs.Serverless.NetCore.Core;
 using Kalarrs.Sreverless.NetCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -6,9 +6,6 @@ using Microsoft.Extensions.Logging;
 
 namespace mongo.Local
 {
-    /// <summary>
-    /// The Main function can be used to run the ASP.NET Core application locally using the Kestrel webserver.
-    /// </summary>
     public class LocalEntryPoint
     {
         public static void Main(string[] args)
@@ -18,8 +15,8 @@ namespace mongo.Local
 
         public static IWebHost BuildWebHost(string[] args)
         {
-            var parser = new Parser();
-            var port = parser.GetPort();
+            var serverlessProject = new ServerlessProject();
+            var port = serverlessProject.GetPort();
             
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((webhostContext, builder) =>

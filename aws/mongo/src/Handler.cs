@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using mongo.models;
+using mongo.models.mongo;
+using mongo.models.requests;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -18,44 +22,41 @@ namespace mongo
 {
     public class Handler
     {
-        public static MongoClient client = new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI"));
-        public static IMongoDatabase database = client.GetDatabase("kalarrs");
-        public static IMongoCollection<UserGroup> collection = database.GetCollection<UserGroup>("userGroups");
+        private static readonly MongoClient Client = new MongoClient(Environment.GetEnvironmentVariable("MONGODB_URI"));
+        private static readonly IMongoDatabase Database = Client.GetDatabase("kalarrs");
+        private static readonly IMongoCollection<MongoUserGroup> UserGroupsCollection = Database.GetCollection<MongoUserGroup>("userGroups");
+        private static readonly IMongoCollection<MongoUser> UsersCollection = Database.GetCollection<MongoUser>("users");
         
         /// <summary>
         /// A Lambda function to respond to HTTP Get /api/user-groups
         /// </summary>
         /// <param name="request"></param>
         /// <returns>A list of userGroups</returns>
-        public async Task<APIGatewayProxyResponse> GetUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
+        public static async Task<APIGatewayProxyResponse> GetUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            var x = Environment.GetEnvironmentVariable("MONGODB_URI");
-            
-            var userGroups = await collection.AsQueryable().ToListAsync().ConfigureAwait(false);
+            var userGroups = await UserGroupsCollection.AsQueryable().ToListAsync().ConfigureAwait(false);
 
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int) HttpStatusCode.OK,
-                Body = JsonConvert.SerializeObject(new ApiResponse<List<UserGroup>>
+                Body = JsonConvert.SerializeObject(new ApiResponse<IEnumerable<UserGroup>>
                 {
-                    Data = userGroups
+                    Data = userGroups?.Select(u => new UserGroup(u))
                 }, Util.DefaultSerializerSettings),
                 Headers = Util.DefaultHeaders
             };
         }
 
-        /*
-        public APIGatewayProxyResponse PostChanges(APIGatewayProxyRequest request, ILambdaContext context)
+        public static async Task<APIGatewayProxyResponse> PostUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogLine("Post Changes\n");
-            
             try
             {
-                var body = JsonConvert.DeserializeObject<PostChangeRequest>(request.Body);
-                if (body.Id == null) throw new JsonSerializationException("Id is required");
+                var body = JsonConvert.DeserializeObject<UserGroupCreateRequest>(request.Body);
 
-                if (Changes.Any(c => c.Id == ObjectId.Parse(body.Id)))
-                {
+                var user = await UsersCollection.AsQueryable().FirstOrDefaultAsync(u => u.Id == ObjectId.Parse(body.UserId));
+                if (user == null) throw new Exception("User Not Found");
+                
+                /*
                     return new APIGatewayProxyResponse
                     {
                         StatusCode = (int) HttpStatusCode.Conflict,
@@ -69,18 +70,17 @@ namespace mongo
                         }, Util.DefaultSerializerSettings),
                         Headers = Util.DefaultHeaders
                     };
-                }
+                */
 
-                var change = new Change() {Id = ObjectId.Parse(body.Id), Description = body.Description};
-
-                Changes.Add(change);
+                var mongoUserGroup = new MongoUserGroup(body, user);
+                await UserGroupsCollection.InsertOneAsync(mongoUserGroup);
 
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int) HttpStatusCode.Created,
-                    Body = JsonConvert.SerializeObject(new ApiResponse<Change>
+                    Body = JsonConvert.SerializeObject(new ApiResponse<UserGroup>
                     {
-                        Data = change,
+                        Data = new UserGroup(mongoUserGroup),
                     }, Util.DefaultSerializerSettings),
                     Headers = Util.DefaultHeaders
                 };
@@ -105,7 +105,7 @@ namespace mongo
                 };
             }
         }
-
+        /*
         public APIGatewayProxyResponse PutChange(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Put Change\n");
@@ -283,15 +283,7 @@ namespace mongo
         public string Description { get; set; }
     }
 
-    public class PostChangeRequest
-    {
-        //[JsonProperty(Required = Required.Always)]
-        //[JsonConverter(typeof(Util.ObjectIdConverter))]
-        public string Id { get; set; }
-
-        [JsonProperty(Required = Required.Always)]
-        public string Description { get; set; }
-    }
+    
 
     public class SnakeCaseEample
     {

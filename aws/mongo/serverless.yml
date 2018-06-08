@@ -30,14 +30,14 @@ functions:
           path: user-groups
           cors: true
 
-#  # create
-#  postChanges:
-#    handler: CsharpHandlers::changes.Handler::PostChanges
-#    events:
-#      - http:
-#          method: post
-#          path: changes
-#          cors: true
+  # create
+  postChanges:
+    handler: CsharpHandlers::changes.Handler::PostUserGroups
+    events:
+      - http:
+          method: post
+          path: user-groups
+          cors: true
 #
 #  # put
 #  putChanges:
