@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -53,8 +54,10 @@ namespace mongo
             {
                 var body = JsonConvert.DeserializeObject<UserGroupCreateRequest>(request.Body);
 
-                var user = await UsersCollection.AsQueryable().FirstOrDefaultAsync(u => u.Id == ObjectId.Parse(body.UserId));
+                var user = await UsersCollection.AsQueryable().FirstOrDefaultAsync(u => u.Id == body.UserId);
                 if (user == null) throw new Exception("User Not Found");
+                
+                // TODO : Check for conflict! IE User is already the owner of a UserGroup!
                 
                 /*
                     return new APIGatewayProxyResponse
@@ -247,7 +250,10 @@ namespace mongo
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
                 JsonSerializer serializer)
             {
-                throw new NotImplementedException();
+                var token = JToken.Load(reader);
+                var str = token.ToObject<string>();
+                if (Nullable.GetUnderlyingType(objectType) != null && str == null) return null;
+                return new ObjectId(str);
             }
 
             public override bool CanConvert(Type objectType)
