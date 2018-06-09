@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using mongo.models.mongo;
 using MongoDB.Bson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace mongo.models
 {
@@ -28,8 +30,8 @@ namespace mongo.models
         public string Name { get; set; }
         public IEnumerable<UserGroupUser> Users { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class UserGroupUser
@@ -43,8 +45,12 @@ namespace mongo.models
         }
 
         public ObjectId Id { get; set; }
-        public UserGroupUserType Type { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))] public UserGroupUserType? Type { get; set; }
+        
+        public int? Score { get; set; }
+        public int? Rank { get; set; }
+        
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

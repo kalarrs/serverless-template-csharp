@@ -19,14 +19,11 @@ namespace mongo.models.mongo
         }
 
         public ObjectId Id { get; set; }
-
         [BsonElement("name")] public string Name { get; set; }
-
         [BsonElement("users")] public List<MongoUserGroupUser> Users { get; set; }
 
-        [BsonElement("createdAt")] public DateTime CreatedAt { get; set; }
-
-        [BsonElement("updatedAt")] public DateTime UpdatedAt { get; set; }
+        [BsonElement("createdAt")] public DateTime? CreatedAt { get; set; }
+        [BsonElement("updatedAt")] public DateTime? UpdatedAt { get; set; }
     }
 
     [BsonIgnoreExtraElements]
@@ -42,11 +39,12 @@ namespace mongo.models.mongo
         }
 
         public ObjectId Id { get; set; }
+        [BsonElement("type")][BsonRepresentation(BsonType.String)] public UserGroupUserType Type { get; set; }
+        
+        [BsonElement("score")] public int? Score { get; set; }
+        [BsonElement("rank")] public int? Rank { get; set; }
 
-        [BsonElement("type")] public UserGroupUserType Type { get; set; }
-
-        [BsonElement("createdAt")] public DateTime CreatedAt { get; set; }
-
-        [BsonElement("updatedAt")] public DateTime UpdatedAt { get; set; }
+        [BsonElement("createdAt")] public DateTime? CreatedAt { get; set; }
+        [BsonElement("updatedAt")] public DateTime? UpdatedAt { get; set; }
     }
 }
