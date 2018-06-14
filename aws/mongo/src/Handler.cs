@@ -36,13 +36,17 @@ namespace mongo
         public static async Task<APIGatewayProxyResponse> GetUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
         {
             var userGroups = await UserGroupsCollection.AsQueryable().ToListAsync().ConfigureAwait(false);
+            var userGroupsWithMembers = userGroups.Where(ug => ug.Members != null && ug.Members.Count > 0);
+            var userIds = userGroupsWithMembers.SelectMany(g => g.Members.Where(m => m.User.HasValue).Select(vm => vm.User.Value));
+            var users = await UsersCollection.AsQueryable().Select(MongoUserGroupMemberUser.UserProjection).Where(u => userIds.Contains(u.Id)).ToListAsync().ConfigureAwait(false);;
+            var userDictionary = users.ToDictionary(u => u.Id);
 
             return new APIGatewayProxyResponse
             {
                 StatusCode = (int) HttpStatusCode.OK,
                 Body = JsonConvert.SerializeObject(new ApiResponse<IEnumerable<UserGroup>>
                 {
-                    Data = userGroups?.Select(u => new UserGroup(u))
+                    Data = userGroups?.Select(u => new UserGroup(u, userDictionary))
                 }, Util.DefaultSerializerSettings),
                 Headers = Util.DefaultHeaders
             };
@@ -54,10 +58,9 @@ namespace mongo
             {
                 var body = JsonConvert.DeserializeObject<UserGroupCreateRequest>(request.Body);
 
-                var user = await UsersCollection.AsQueryable().FirstOrDefaultAsync(u => u.Id == body.UserId);
+                var user = await UsersCollection.AsQueryable().Select(MongoUserGroupMemberUser.UserProjection).FirstOrDefaultAsync(u => u.Id == body.UserId);
                 if (user == null) throw new Exception("User Not Found");
-                
-                // TODO : Check for conflict! IE User is already the owner of a UserGroup!
+                // TODO : Check for conflict! IE User is already the owner of a UserGroup! Also check if the group name is already in use. IE make name unique.
                 
                 /*
                     return new APIGatewayProxyResponse
@@ -77,13 +80,14 @@ namespace mongo
 
                 var mongoUserGroup = new MongoUserGroup(body, user);
                 await UserGroupsCollection.InsertOneAsync(mongoUserGroup);
+                var userDictionary = new[] {user}.ToDictionary(u => u.Id);
 
                 return new APIGatewayProxyResponse
                 {
                     StatusCode = (int) HttpStatusCode.Created,
                     Body = JsonConvert.SerializeObject(new ApiResponse<UserGroup>
                     {
-                        Data = new UserGroup(mongoUserGroup),
+                        Data = new UserGroup(mongoUserGroup, userDictionary),
                     }, Util.DefaultSerializerSettings),
                     Headers = Util.DefaultHeaders
                 };
@@ -281,20 +285,5 @@ namespace mongo
         public ErrorType Type { get; set; }
 
         public string Message { get; set; }
-    }
-
-    public class Change
-    {
-        public ObjectId Id { get; set; }
-        public string Description { get; set; }
-    }
-
-    
-
-    public class SnakeCaseEample
-    {
-        [JsonProperty("first_name")] public string FirstName { get; set; }
-
-        [JsonProperty("last_name")] public string LastName { get; set; }
     }
 }

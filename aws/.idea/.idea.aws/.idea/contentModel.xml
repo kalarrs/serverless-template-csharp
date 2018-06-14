@@ -86,6 +86,7 @@
             <e p="requests" t="Include">
               <e p="UserGroupCreateRequest.cs" t="Include" />
             </e>
+            <e p="User.cs" t="Include" />
             <e p="UserGroup.cs" t="Include" />
           </e>
           <e p="mongo.csproj" t="IncludeRecursive" />
