@@ -23,7 +23,7 @@ namespace mongo.Tests
 
             request = new APIGatewayProxyRequest();
             context = new TestLambdaContext();
-            response = await Handler.GetUserGroups(request, context);
+            response = await Handler.GetUserGroups(request, context).ConfigureAwait(false);
             Assert.Equal(200, response.StatusCode);
 
             var expectedBody =

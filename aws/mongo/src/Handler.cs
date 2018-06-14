@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
@@ -27,7 +28,8 @@ namespace mongo
         private static readonly IMongoDatabase Database = Client.GetDatabase("kalarrs");
         private static readonly IMongoCollection<MongoUserGroup> UserGroupsCollection = Database.GetCollection<MongoUserGroup>("userGroups");
         private static readonly IMongoCollection<MongoUser> UsersCollection = Database.GetCollection<MongoUser>("users");
-        
+        private static readonly ConfiguredTaskAwaitable<string> NameIndex = UserGroupsCollection.Indexes
+            .CreateOneAsync(new IndexKeysDefinitionBuilder<MongoUserGroup>().Descending(ug => ug.Name), new CreateIndexOptions() {Unique = true}).ConfigureAwait(false); 
         /// <summary>
         /// A Lambda function to respond to HTTP Get /api/user-groups
         /// </summary>
@@ -58,7 +60,7 @@ namespace mongo
             {
                 var body = JsonConvert.DeserializeObject<UserGroupCreateRequest>(request.Body);
 
-                var user = await UsersCollection.AsQueryable().Select(MongoUserGroupMemberUser.UserProjection).FirstOrDefaultAsync(u => u.Id == body.UserId);
+                var user = await UsersCollection.AsQueryable().Select(MongoUserGroupMemberUser.UserProjection).FirstOrDefaultAsync(u => u.Id == body.UserId).ConfigureAwait(false);
                 if (user == null) throw new Exception("User Not Found");
                 // TODO : Check for conflict! IE User is already the owner of a UserGroup! Also check if the group name is already in use. IE make name unique.
                 
@@ -79,7 +81,7 @@ namespace mongo
                 */
 
                 var mongoUserGroup = new MongoUserGroup(body, user);
-                await UserGroupsCollection.InsertOneAsync(mongoUserGroup);
+                await UserGroupsCollection.InsertOneAsync(mongoUserGroup).ConfigureAwait(false);
                 var userDictionary = new[] {user}.ToDictionary(u => u.Id);
 
                 return new APIGatewayProxyResponse

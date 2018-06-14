@@ -23,7 +23,7 @@ namespace Kalarrs.Serverless.NetCore.Util
             if (request.Body != null) {
                 using (var reader = new StreamReader(request.Body, Encoding.UTF8))
                 {  
-                    body = await reader.ReadToEndAsync();
+                    body = await reader.ReadToEndAsync().ConfigureAwait(false);
                 }
             }
 
@@ -66,7 +66,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                 Console.ResetColor();
                 Console.Write($"http://localhost:{port}/{httpEvent.PathToExpressRouteParameters()}\n");
 
-                var cb = await HandleRoute(httpEvent, handlerMethod, handler);
+                var cb = await HandleRoute(httpEvent, handlerMethod, handler).ConfigureAwait(false);
                 
                 switch (httpEvent.Method)
                 {
@@ -96,11 +96,11 @@ namespace Kalarrs.Serverless.NetCore.Util
             return async (context) =>
             {
                 APIGatewayProxyResponse response;
-                var apiGatewayProxyRequest = await context.ToAPIGatewayProxyRequest(httpEvent.Path);
+                var apiGatewayProxyRequest = await context.ToAPIGatewayProxyRequest(httpEvent.Path).ConfigureAwait(false);
 
                 var handlerResponse = handlerMethod.Invoke(handler, new object[] {apiGatewayProxyRequest, new TestLambdaContext()});
                 
-                if (handlerResponse is Task<APIGatewayProxyResponse> task) response = await task;
+                if (handlerResponse is Task<APIGatewayProxyResponse> task) response = await task.ConfigureAwait(false);
                 else if (handlerResponse is APIGatewayProxyResponse proxyResponse) response = proxyResponse;
                 else throw new Exception("The Method did not return an APIGatewayProxyResponse.");
 
@@ -113,7 +113,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                 }
 
                 context.Response.StatusCode = response.StatusCode;
-                if (response.Body != null) await context.Response.WriteAsync(response.Body);
+                if (response.Body != null) await context.Response.WriteAsync(response.Body).ConfigureAwait(false);
             };
         }
     }
