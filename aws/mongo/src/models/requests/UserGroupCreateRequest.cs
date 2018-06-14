@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using mongo.utils;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 
 namespace mongo.models.requests
@@ -6,7 +7,7 @@ namespace mongo.models.requests
     public class UserGroupCreateRequest
     {
         [JsonRequired]
-        [JsonConverter(typeof(Util.ObjectIdConverter))]
+        [JsonConverter(typeof(JsonConverterUtil.ObjectIdConverter))]
         public ObjectId UserId { get; set; }
 
         [JsonProperty(Required = Required.Always)]

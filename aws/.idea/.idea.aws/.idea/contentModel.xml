@@ -97,6 +97,10 @@
               </e>
             </e>
           </e>
+          <e p="utils" t="Include">
+            <e p="ApiGatewayUtil.cs" t="Include" />
+            <e p="JsonConverterUtil.cs" t="Include" />
+          </e>
         </e>
         <e p="test" t="IncludeRecursive">
           <e p="bin" t="ExcludeRecursive" />
