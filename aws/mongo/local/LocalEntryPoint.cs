@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace mongo.Local
 {
-    public class LocalEntryPoint
+    public static class LocalEntryPoint
     {
         public static ServerlessProject ServerlessProject { get; private set; }
 
@@ -16,7 +16,7 @@ namespace mongo.Local
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        private static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((webhostContext, builder) =>
