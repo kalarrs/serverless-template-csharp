@@ -1,6 +1,7 @@
 ﻿using System;
 using Kalarrs.Serverless.NetCore.Core;
 using Kalarrs.Serverless.NetCore.Util;
+using mongo.Local;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -20,16 +21,16 @@ namespace Kalarrs.Sreverless.NetCore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(LocalEntryPoint.ServerlessProject);
             services.AddRouting();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ServerlessProject serverlessProject)
         {
             var routeBuilder = new RouteBuilder(app);
-            var serverlessProject = new ServerlessProject();
 
             var environmentVariables = serverlessProject.GetEnvironmentVariables();
-            foreach (var keyValuePair in environmentVariables) Environment.SetEnvironmentVariable(keyValuePair.Key, keyValuePair.Value.ToString());                    
+            foreach (var keyValuePair in environmentVariables) Environment.SetEnvironmentVariable(keyValuePair.Key, keyValuePair.Value);                    
             
             var httpEvents = serverlessProject.GetHttpEvents();
             var port = serverlessProject.GetPort();
