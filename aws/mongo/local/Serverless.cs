@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Kalarrs.Sreverless.NetCore
 {
@@ -6,6 +7,7 @@ namespace Kalarrs.Sreverless.NetCore
     {
         private static readonly Regex RouteParamRegex = new Regex("\\{(.*?)\\}");
 
+        public Dictionary<string, string> Environment { get; set; }
         public string Handler { get; set; }
         public string Method { get; set; }
         public string Path { get; set; }

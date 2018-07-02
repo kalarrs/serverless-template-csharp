@@ -26,7 +26,7 @@ namespace mongo.Local
                         .AddDebug();
                 })
                 .UseStartup<Startup<Handler>>()
-                .UseUrls($"http://localhost:{ServerlessProject.GetPort()}")
+                .UseUrls($"http://localhost:{ServerlessProject.Port}")
                 .Build();
         }
     }

@@ -28,13 +28,10 @@ namespace Kalarrs.Sreverless.NetCore
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ServerlessProject serverlessProject)
         {
             var routeBuilder = new RouteBuilder(app);
-
-            var environmentVariables = serverlessProject.GetEnvironmentVariables();
-            foreach (var keyValuePair in environmentVariables) Environment.SetEnvironmentVariable(keyValuePair.Key, keyValuePair.Value);                    
             
             var httpEvents = serverlessProject.GetHttpEvents();
-            var port = serverlessProject.GetPort();
-            routeBuilder.AddRoutes<T>(httpEvents, port);
+            var port = serverlessProject.Port;
+            routeBuilder.AddRoutes<T>(serverlessProject.DefaultEnvironmentVariables, serverlessProject.EnvironmentVariables, httpEvents, port);
 
             var routes = routeBuilder.Build();
             app.UseRouter(routes);
