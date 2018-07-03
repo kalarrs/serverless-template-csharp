@@ -153,30 +153,12 @@ namespace mongo
                 foreach (var removedUserId in removedUserIds)
                 {
                     var userGroups = userToUserGroupDict[removedUserId].UserGroups;
-                    var filter = Builders<MongoUserGroup>.Filter.Where(ug => userGroups.Contains(ug.Id));
+                    var filter = Builders<MongoUserGroup>.Filter.Where(m => userGroups.Contains(m.Id));
                     var update = Builders<MongoUserGroup>.Update.PullFilter(ug => ug.Members, m => m.User == removedUserId);
                     models.Add(new UpdateManyModel<MongoUserGroup>(filter, update));
                 }
 
-                try
-                {
-                    var bulk = await UserGroupsCollection.BulkWriteAsync(models);
-                    return new APIGatewayProxyResponse
-                    {
-                        StatusCode = (int) HttpStatusCode.OK,
-                        Body = JsonConvert.SerializeObject(new ApiGatewayUtil.ApiResponse<object>
-                        {
-                            Data = bulk
-                        }, ApiGatewayUtil.DefaultSerializerSettings),
-                        Headers = ApiGatewayUtil.DefaultHeaders
-                    };
-                }
-                catch (Exception e)
-                {
-                    ;
-                }
-
-                
+                var bulk = await UserGroupsCollection.BulkWriteAsync(models); 
             }
 
             return new APIGatewayProxyResponse
