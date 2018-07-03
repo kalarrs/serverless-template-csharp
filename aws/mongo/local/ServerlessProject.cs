@@ -62,8 +62,8 @@ namespace Kalarrs.Serverless.NetCore.Core
                 foreach (var @event in events)
                 {
                     var http = @event.Http;
-                    var schedule = @event.Schedule;
-                    if (http == null && schedule == null) continue;
+//                    var schedule = @event.Schedule;
+//                    if (http == null && schedule == null) continue;
 
                     if (http != null)
                     {
@@ -77,9 +77,9 @@ namespace Kalarrs.Serverless.NetCore.Core
                         });
                     }
 
-                    if (schedule != null)
-                    {
-                    }
+//                    if (schedule != null)
+//                    {
+//                    }
                 }
             }
 
@@ -137,7 +137,7 @@ namespace Kalarrs.Serverless.NetCore.Core
     public class ServerlessYamlFunctionHttpEvent
     {
         public ServerlessYamlFunctionHttpEventHttp Http { get; set; }
-        public JObject Schedule { get; set; }
+        //public JObject Schedule { get; set; }
     }
 
     public class ServerlessYamlFunctionHttpEventHttp
