@@ -12,6 +12,8 @@ namespace Kalarrs.Sreverless.NetCore
 {
     public class Startup<T> where T : new()
     {
+        public static ServerlessProject ServerlessProject { get; set; }
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -21,17 +23,15 @@ namespace Kalarrs.Sreverless.NetCore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(LocalEntryPoint.ServerlessProject);
+            if (ServerlessProject == null) throw new Exception("Startup Failed! Please create and store an instance of ServerlessProject on Startup<T>.ServerlessProject");
+            services.AddSingleton(ServerlessProject);
             services.AddRouting();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ServerlessProject serverlessProject)
         {
             var routeBuilder = new RouteBuilder(app);
-            
-            var httpEvents = serverlessProject.GetHttpEvents();
-            var port = serverlessProject.Port;
-            routeBuilder.AddRoutes<T>(serverlessProject.DefaultEnvironmentVariables, serverlessProject.EnvironmentVariables, httpEvents, port);
+            routeBuilder.AddRoutes<T>(serverlessProject);
 
             var routes = routeBuilder.Build();
             app.UseRouter(routes);

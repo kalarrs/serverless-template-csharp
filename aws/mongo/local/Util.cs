@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.TestUtilities;
-using Kalarrs.Sreverless.NetCore;
+using Kalarrs.Serverless.NetCore.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -45,16 +45,15 @@ namespace Kalarrs.Serverless.NetCore.Util
             };
         }
 
-        public static async void AddRoutes<T>(this IRouteBuilder routeBuilder, IDictionary defatultEnvironmentVariables, Dictionary<string, string> serverlessEnvironmentVariables, IEnumerable<HttpEvent> httpEvents, string port) where T : new()
+        public static async void AddRoutes<T>(this IRouteBuilder routeBuilder, ServerlessProject serverlessProject) where T : new()
         {
             var handler = new T();
             var handlerType = handler.GetType();
 
-
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("----");
             Console.ResetColor();
-            foreach (var httpEvent in httpEvents)
+            foreach (var httpEvent in serverlessProject.GetHttpConfigs())
             {
                 // TODO : Options. If route has cors then return correct headers.
 
@@ -66,24 +65,24 @@ namespace Kalarrs.Serverless.NetCore.Util
                 Console.WriteLine($"{httpEvent.Handler}:");
                 Console.Write($" {httpEvent.Method} ");
                 Console.ResetColor();
-                Console.Write($"http://localhost:{port}/{httpEvent.PathToExpressRouteParameters()}\n");
+                Console.Write($"http://localhost:{serverlessProject.Port}/{httpEvent.EventType.ToString().ToLowerInvariant()}/{httpEvent.PathToExpressRouteParameters()}\n");
 
-                var cb = await HandleRoute(defatultEnvironmentVariables, serverlessEnvironmentVariables, httpEvent, handlerMethod, handler).ConfigureAwait(false);
+                var cb = await HandleRoute(serverlessProject.DefaultEnvironmentVariables, serverlessProject.EnvironmentVariables, httpEvent, handlerMethod, handler).ConfigureAwait(false);
 
                 switch (httpEvent.Method)
                 {
-                    case "GET":
+                    case HttpMethod.Get:
                         routeBuilder.MapGet(httpEvent.Path, cb);
                         break;
-                    case "POST":
+                    case HttpMethod.Post:
                     {
                         routeBuilder.MapPost(httpEvent.Path, cb);
                         break;
                     }
-                    case "PUT":
+                    case HttpMethod.Put:
                         routeBuilder.MapPut(httpEvent.Path, cb);
                         break;
-                    case "DELETE":
+                    case HttpMethod.Delete:
                         routeBuilder.MapDelete(httpEvent.Path, cb);
                         break;
                 }
@@ -93,7 +92,7 @@ namespace Kalarrs.Serverless.NetCore.Util
             Console.ResetColor();
         }
 
-        private static async Task<RequestDelegate> HandleRoute<T>(IDictionary defatultEnvironmentVariables, Dictionary<string, string> serverlessEnvironmentVariables, HttpEvent httpEvent, MethodBase handlerMethod, T handler)
+        private static async Task<RequestDelegate> HandleRoute<T>(IDictionary defatultEnvironmentVariables, Dictionary<string, string> serverlessEnvironmentVariables, HttpConfig httpEvent, MethodBase handlerMethod, T handler)
         {
             return async (context) =>
             {

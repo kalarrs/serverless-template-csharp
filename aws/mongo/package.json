@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@kalarrs/serverless-project-utils": "^2.1.0"
+    "@kalarrs/serverless-project-utils": "^2.2.0"
   }
 }

@@ -8,11 +8,9 @@ namespace mongo.Local
 {
     public static class LocalEntryPoint
     {
-        public static ServerlessProject ServerlessProject { get; private set; }
-
         public static void Main(string[] args)
         {
-            ServerlessProject = new ServerlessProject();
+            Startup<Handler>.ServerlessProject = new ServerlessProject();
             BuildWebHost(args).Run();
         }
 
@@ -26,7 +24,7 @@ namespace mongo.Local
                         .AddDebug();
                 })
                 .UseStartup<Startup<Handler>>()
-                .UseUrls($"http://localhost:{ServerlessProject.Port}")
+                .UseUrls($"http://localhost:{Startup<Handler>.ServerlessProject.Port}")
                 .Build();
         }
     }

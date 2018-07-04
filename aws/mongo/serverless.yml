@@ -23,7 +23,7 @@ package:
 functions:
   # list
   getUserGroups:
-    handler: CsharpHandlers::changes.Handler::ReferentialIntegrityUserGroups
+    handler: CsharpHandlers::changes.Handler::GetUserGroups
     events:
       - http:
           method: get

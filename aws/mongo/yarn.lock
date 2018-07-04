@@ -2,6 +2,17 @@
 # yarn lockfile v1
 
 
-"@kalarrs/serverless-project-utils@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@kalarrs/serverless-project-utils/-/serverless-project-utils-2.1.0.tgz#0739ae34baa03804cd78a874f0fba9e2f537082b"
+"@kalarrs/serverless-project-utils@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@kalarrs/serverless-project-utils/-/serverless-project-utils-2.2.0.tgz#3cfcbc843a54ac75dc2bd922083d867e3981e83a"
+  dependencies:
+    cronstrue "^1.31.0"
+    moment "^2.22.2"
+
+cronstrue@^1.31.0:
+  version "1.31.0"
+  resolved "https://registry.yarnpkg.com/cronstrue/-/cronstrue-1.31.0.tgz#fd3db94b52c296550a5f53efe04691a1380e294d"
+
+moment@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
