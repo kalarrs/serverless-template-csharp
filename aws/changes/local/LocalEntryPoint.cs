@@ -1,4 +1,4 @@
-﻿using Kalarrs.Serverless.NetCore.Yaml;
+﻿using Kalarrs.NetCore.Util;
 using Kalarrs.Sreverless.NetCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -9,18 +9,16 @@ namespace changes.Local
     /// <summary>
     /// The Main function can be used to run the ASP.NET Core application locally using the Kestrel webserver.
     /// </summary>
-    public class LocalEntryPoint
+    public static class LocalEntryPoint
     {
         public static void Main(string[] args)
         {
+            Startup<Handler>.ServerlessProject = new ServerlessProject();
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        private static IWebHost BuildWebHost(string[] args)
         {
-            var parser = new Parser();
-            var port = parser.GetPort();
-            
             return WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((webhostContext, builder) =>
                 {
@@ -29,7 +27,7 @@ namespace changes.Local
                         .AddDebug();
                 })
                 .UseStartup<Startup<Handler>>()
-                .UseUrls($"http://localhost:{port}")
+                .UseUrls($"http://localhost:{Startup<Handler>.ServerlessProject.Port}")
                 .Build();
         }
     }

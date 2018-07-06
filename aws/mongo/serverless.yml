@@ -45,6 +45,10 @@ functions:
     handler: CsharpHandlers::changes.Handler::ReferentialIntegrityUserGroups
     events:
       - schedule: rate(1 day)
+
+  test:
+    handler: CsharpHandlers::changes.Handler::Schedule
+    events:
       - schedule:
           rate: cron(0 10 * * ? *)
           enabled: false
@@ -53,6 +57,7 @@ functions:
             key2: value2
             stageParams:
               stage: dev
+              
 #
 #  # put
 #  putChanges:

@@ -1,7 +1,6 @@
 ﻿using System;
-using Kalarrs.Serverless.NetCore.Core;
-using Kalarrs.Serverless.NetCore.Util;
-using mongo.Local;
+using Kalarrs.NetCore.Util;
+using Kalarrs.NetCore.Util.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;

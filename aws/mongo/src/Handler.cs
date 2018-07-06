@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using mongo.Local;
+using Amazon.Lambda.ScheduledEvents;
 using mongo.models;
 using mongo.models.mongo;
 using mongo.models.requests;
@@ -169,6 +169,32 @@ namespace mongo
             
             Console.WriteLine("Context Object:");
             Console.WriteLine(JsonConvert.SerializeObject(context));
+        }
+
+        public class Input
+        {
+            public string Key1 { get; set; }
+            public string Key2 { get; set; }
+            public InputStageParams StageParams { get; set; }
+        }
+
+        public class InputStageParams
+        {
+            public string Stage { get; set; }
+        }
+        
+        /*
+         * key1: value1
+            key2: value2
+            stageParams:
+              stage: dev
+         */
+
+        public static async Task<object> Schedule(Input input, ILambdaContext context)
+        {
+            Console.WriteLine("Event Object:");
+            Console.WriteLine(JsonConvert.SerializeObject(input));
+            return input;
         }
     }
 }

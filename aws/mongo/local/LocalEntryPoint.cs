@@ -1,4 +1,4 @@
-﻿using Kalarrs.Serverless.NetCore.Core;
+﻿using Kalarrs.NetCore.Util;
 using Kalarrs.Sreverless.NetCore;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
