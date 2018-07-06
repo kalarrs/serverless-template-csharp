@@ -67,7 +67,7 @@ namespace Kalarrs.Serverless.NetCore.Util
                 Console.WriteLine($"{httpConfig.Handler}:");
                 Console.Write($" {httpConfig.Method} ");
                 Console.ResetColor();
-                Console.Write($"http://localhost:{serverlessProject.Port}/{httpConfig.EventType.ToString().ToLowerInvariant()}/{httpConfig.PathToExpressRouteParameters()}\n");
+                Console.Write($"http://localhost:{serverlessProject.Port}/{httpConfig.PathToExpressRouteParameters()}\n");
 
 
                 RequestDelegate cb;
