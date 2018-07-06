@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using mongo.Local;
 using mongo.models;
 using mongo.models.mongo;
 using mongo.models.requests;
@@ -129,8 +130,12 @@ namespace mongo
             }
         }
         
-        public static async Task<APIGatewayProxyResponse> ReferentialIntegrityUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
+        public static async Task ReferentialIntegrityUserGroups(ScheduledEvent @event, ILambdaContext context)
         {
+            
+            Console.WriteLine("Event Object:");
+            Console.WriteLine(JsonConvert.SerializeObject(@event));
+            
             var userToUserGroupsBson = await UserGroupsCollection.Aggregate()
                 .Match(u => u.Members.Count > 0)
                 .Project(u => new UsersProjection() {Id = u.Id, UserId = u.Members.Select(m => m.User)})
@@ -158,35 +163,12 @@ namespace mongo
                     models.Add(new UpdateManyModel<MongoUserGroup>(filter, update));
                 }
 
-                var bulk = await UserGroupsCollection.BulkWriteAsync(models); 
+                var bulk = await UserGroupsCollection.BulkWriteAsync(models);
+                Console.WriteLine(JsonConvert.SerializeObject(bulk));
             }
-
-            return new APIGatewayProxyResponse
-            {
-                StatusCode = (int) HttpStatusCode.OK,
-                Body = JsonConvert.SerializeObject(new ApiGatewayUtil.ApiResponse<IEnumerable<object>>
-                {
-                    Data = null
-                }, ApiGatewayUtil.DefaultSerializerSettings),
-                Headers = ApiGatewayUtil.DefaultHeaders
-            };
             
-            /*
-            var userGroups = await UserGroupsCollection.AsQueryable()
-                .Where(u => u.Members.Count > 0)
-                .Select(u => new
-                {
-                    Id = u.Id,
-                    Users = u.Members.Select(m => m.User)
-                })
-                .Unwind
-                .ToListAsync()
-                .ConfigureAwait(false);
-            var userGroupsWithMembers = userGroups.Where(ug => ug.Members != null && ug.Members.Count > 0);
-            var userIds = userGroupsWithMembers.SelectMany(g => g.Members.Where(m => m.User.HasValue).Select(vm => vm.User.Value));
-            var users = await UsersCollection.AsQueryable().Select(MongoUserGroupMemberUser.UserProjection).Where(u => userIds.Contains(u.Id)).ToListAsync().ConfigureAwait(false);;
-            var userDictionary = users.ToDictionary(u => u.Id);
-            */
+            Console.WriteLine("Context Object:");
+            Console.WriteLine(JsonConvert.SerializeObject(context));
         }
     }
 }

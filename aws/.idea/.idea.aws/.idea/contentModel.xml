@@ -75,6 +75,7 @@
         <e p="package.json" t="Include" />
         <e p="serverless.yml" t="Include" />
         <e p="src" t="IncludeRecursive">
+          <e p="AWS.ScheduledEvent.cs" t="Include" />
           <e p="bin" t="ExcludeRecursive" />
           <e p="Handler.cs" t="Include" />
           <e p="models" t="Include">

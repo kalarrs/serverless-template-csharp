@@ -37,6 +37,7 @@ namespace Kalarrs.Serverless.NetCore.Core
         public string Path { get; set; }
         public bool Cors { get; set; }
         public EventType EventType { get; set; }
+        public JObject RequestBody { get; set; }
 
         public string PathToExpressRouteParameters()
         {
@@ -122,7 +123,8 @@ namespace Kalarrs.Serverless.NetCore.Core
                             Environment = function.Environment,
                             Method = HttpMethod.Get,
                             Path = $"{funtionKeyValue.Key}/{(_serverlessYaml.Custom.LocalDevScheduleShowLocalTime ? schedule.Meta.Local : schedule.Meta.Utc)}",
-                            Cors = true
+                            Cors = true,
+                            RequestBody = schedule.Input
                         });
                     }
                 }
@@ -199,6 +201,7 @@ namespace Kalarrs.Serverless.NetCore.Core
         public string Rate { get; set; }
         public bool Enabled { get; set; }
         public ServerlessYamlFunctionEventScheduleMeta Meta { get; set; }
+        public JObject Input { get; set; }
     }
 
     public class ServerlessYamlFunctionEventScheduleMeta
