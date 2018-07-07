@@ -1,4 +1,4 @@
-service: mongo
+service: "mongo-api-csharp"
 
 plugins:
  - "@kalarrs/serverless-project-utils"
@@ -28,7 +28,7 @@ functions:
     events:
       - http:
           method: get
-          path: user-groups
+          path: csharp/user-groups
           cors: true
 
   # create
@@ -37,7 +37,7 @@ functions:
     events:
       - http:
           method: post
-          path: user-groups
+          path: csharp/user-groups
           cors: true
           
   # referential integrity
@@ -82,4 +82,4 @@ functions:
 
 custom:
   user: ${file(../serverless.yml):custom.user}
-  localDevPort: 5005
+  localDevPort: 5011
