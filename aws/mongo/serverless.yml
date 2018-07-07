@@ -2,6 +2,7 @@ service: mongo
 
 plugins:
  - "@kalarrs/serverless-project-utils"
+ - "@kalarrs/serverless-shared-api-gateway"
 
 provider:
   name: aws
@@ -43,11 +44,13 @@ functions:
   
   referentialIntegrity:
     handler: CsharpHandlers::changes.Handler::ReferentialIntegrityUserGroups
+    timeout: 60
     events:
       - schedule: rate(1 day)
 
   test:
     handler: CsharpHandlers::changes.Handler::Schedule
+    timeout: 60
     events:
       - schedule:
           rate: cron(0 10 * * ? *)

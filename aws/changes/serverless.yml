@@ -2,6 +2,7 @@ service: "change-name"
 
 plugins:
  - "@kalarrs/serverless-project-utils"
+ - "@kalarrs/serverless-shared-api-gateway"
 
 provider:
   name: aws
