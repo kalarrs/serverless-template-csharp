@@ -16,7 +16,6 @@ namespace Kalarrs.NetCore.Util
         private readonly ServerlessConfig _serverlessConfig;
 
         private static readonly Regex RoutePrefixSuffixRegex = new Regex("(^/|/$)");
-        private static readonly Regex HandlerRegex = new Regex(".*?\\.Handler::(.+)$");
 
         private const string DefaultPort = "5000";
 
@@ -52,12 +51,10 @@ namespace Kalarrs.NetCore.Util
             foreach (var funtionKeyValue in functions)
             {
                 var function = funtionKeyValue.Value;
-                if (function == null) continue;
-
-                var handlerName = function.Handler;
+                if (function.Handler == null) continue;
 
                 var events = function.Events;
-                if (handlerName == null || events == null) continue;
+                if (function.Handler == null || events == null) continue;
 
                 foreach (var @event in events)
                 {
@@ -70,7 +67,7 @@ namespace Kalarrs.NetCore.Util
                         httpConfigs.Add(new HttpConfig()
                         {
                             EventType = EventType.Http,
-                            Handler = HandlerRegex.Replace(handlerName, "$1"),
+                            Hander = function.Handler,
                             Environment = function.Environment,
                             Method = http.Method,
                             Path = http.Path == null ? null : RoutePrefixSuffixRegex.Replace(http.Path, ""),
@@ -83,7 +80,7 @@ namespace Kalarrs.NetCore.Util
                         httpConfigs.Add(new HttpConfig()
                         {
                             EventType = EventType.Schedule,
-                            Handler = HandlerRegex.Replace(handlerName, "$1"),
+                            Hander = function.Handler,
                             Environment = function.Environment,
                             Method = HttpMethod.Get,
                             Path = $"{funtionKeyValue.Key}/{(_serverlessConfig.Custom.LocalDevScheduleShowLocalTime ? schedule.Meta.Local : schedule.Meta.Utc)}",

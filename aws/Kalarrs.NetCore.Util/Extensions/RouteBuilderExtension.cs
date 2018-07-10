@@ -11,6 +11,7 @@ namespace Kalarrs.NetCore.Util.Extensions
         {
             var handler = new T();
             var handlerType = handler.GetType();
+            var handlerPathPrefix = $"CsharpHandlers::{handlerType.Namespace}.{handlerType.Name}::";         
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("----");
@@ -18,13 +19,15 @@ namespace Kalarrs.NetCore.Util.Extensions
             foreach (var httpConfig in serverlessProject.GetHttpConfigs())
             {
                 // TODO : Options. If route has cors then return correct headers.
+                var configHandlerPathPrefix = $"{httpConfig.Assembly}::{httpConfig.Namespace}.{httpConfig.ClassName}::";
+                if (handlerPathPrefix != configHandlerPathPrefix) continue;
 
-                var handlerMethod = handlerType.GetMethod(httpConfig.Handler);
+                var handlerMethod = handlerType.GetMethod(httpConfig.MethodName);
                 if (handlerMethod == null) throw new Exception("The Method was not found!"); // TODO: Return a 500 with appropriate error.
                 var parameters = handlerMethod.GetParameters();
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"{httpConfig.Handler}:");
+                Console.WriteLine($"{httpConfig.MethodName}:");
                 Console.Write($" {httpConfig.Method} ");
                 Console.ResetColor();
                 Console.Write($"http://localhost:{serverlessProject.Port}/{httpConfig.PathToExpressRouteParameters()}\n");
