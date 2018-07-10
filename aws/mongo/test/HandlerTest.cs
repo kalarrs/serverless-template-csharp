@@ -7,19 +7,12 @@ namespace mongo.Tests
 {
     public class HandlerTest
     {
-        public HandlerTest()
-        {
-        }
-
         [Fact]
         public async void TetGetMethod()
         {
             TestLambdaContext context;
             APIGatewayProxyRequest request;
             APIGatewayProxyResponse response;
-
-            Handler functions = new Handler();
-
 
             request = new APIGatewayProxyRequest();
             context = new TestLambdaContext();

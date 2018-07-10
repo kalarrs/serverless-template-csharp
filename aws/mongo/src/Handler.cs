@@ -177,7 +177,7 @@ namespace mongo
             public string Stage { get; set; }
         }
 
-        public static async Task<object> Schedule(Input input, ILambdaContext context)
+        public static object Schedule(Input input, ILambdaContext context)
         {
             Console.WriteLine("Event Object:");
             Console.WriteLine(JsonConvert.SerializeObject(input));
