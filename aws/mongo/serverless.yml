@@ -24,7 +24,8 @@ package:
 functions:
   # list
   getUserGroups:
-    handler: CsharpHandlers::changes.Handler::GetUserGroups
+    handler: CsharpHandlers::mongo.Handler::GetUserGroups
+    timeout: 30
     events:
       - http:
           method: get
@@ -33,7 +34,8 @@ functions:
 
   # create
   postChanges:
-    handler: CsharpHandlers::changes.Handler::PostUserGroups
+    handler: CsharpHandlers::mongo.Handler::PostUserGroups
+    timeout: 30
     events:
       - http:
           method: post
@@ -43,13 +45,13 @@ functions:
   # referential integrity
   
   referentialIntegrity:
-    handler: CsharpHandlers::changes.Handler::ReferentialIntegrityUserGroups
+    handler: CsharpHandlers::mongo.Handler::ReferentialIntegrityUserGroups
     timeout: 60
     events:
       - schedule: rate(1 day)
 
   test:
-    handler: CsharpHandlers::changes.Handler::Schedule
+    handler: CsharpHandlers::mongo.Handler::Schedule
     timeout: 60
     events:
       - schedule:
@@ -64,7 +66,7 @@ functions:
 #
 #  # put
 #  putChanges:
-#    handler: CsharpHandlers::changes.Handler::PutChange
+#    handler: CsharpHandlers::mongo.Handler::PutChange
 #    events:
 #      - http:
 #          method: put
@@ -73,7 +75,7 @@ functions:
 #
 #  # delete
 #  deleteChanges:
-#    handler: CsharpHandlers::changes.Handler::DeleteChange
+#    handler: CsharpHandlers::mongo.Handler::DeleteChange
 #    events:
 #      - http:
 #          method: delete

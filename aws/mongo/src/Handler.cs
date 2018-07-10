@@ -27,14 +27,8 @@ namespace mongo
         private static readonly IMongoDatabase Database = Client.GetDatabase("kalarrs");
         private static readonly IMongoCollection<MongoUserGroup> UserGroupsCollection = Database.GetCollection<MongoUserGroup>("userGroups");
         private static readonly IMongoCollection<MongoUser> UsersCollection = Database.GetCollection<MongoUser>("users");
-        private static readonly ConfiguredTaskAwaitable<string> NameIndex = UserGroupsCollection.Indexes
-            .CreateOneAsync(new IndexKeysDefinitionBuilder<MongoUserGroup>().Descending(ug => ug.Name), new CreateIndexOptions() {Unique = true}).ConfigureAwait(false); 
+        private static readonly ConfiguredTaskAwaitable<string> NameIndex = UserGroupsCollection.Indexes.CreateOneAsync(new IndexKeysDefinitionBuilder<MongoUserGroup>().Descending(ug => ug.Name), new CreateIndexOptions() {Unique = true}).ConfigureAwait(false); 
         
-        /// <summary>
-        /// A Lambda function to respond to HTTP Get /api/user-groups
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>A list of userGroups</returns>
         public static async Task<APIGatewayProxyResponse> GetUserGroups(APIGatewayProxyRequest request, ILambdaContext context)
         {
             try
@@ -182,13 +176,6 @@ namespace mongo
         {
             public string Stage { get; set; }
         }
-        
-        /*
-         * key1: value1
-            key2: value2
-            stageParams:
-              stage: dev
-         */
 
         public static async Task<object> Schedule(Input input, ILambdaContext context)
         {
