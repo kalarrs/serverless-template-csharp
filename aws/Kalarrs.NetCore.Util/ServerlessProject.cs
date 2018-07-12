@@ -4,35 +4,34 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using Kalarrs.Sreverless.NetCore;
+using Kalarrs.NetCore.Util.ServerlessConfigs;
 using Newtonsoft.Json.Linq;
 
-namespace Kalarrs.Serverless.NetCore.Core
+namespace Kalarrs.NetCore.Util
 {
     public class ServerlessProject
     {
         private readonly string _path;
         private readonly JObject _serverlessJson;
-        private readonly ServerlessYaml _serverlessYaml;
+        private readonly ServerlessConfig _serverlessConfig;
 
         private static readonly Regex RoutePrefixSuffixRegex = new Regex("(^/|/$)");
-        private static readonly Regex HandlerRegex = new Regex(".*?\\.Handler::(.+)$");
 
         private const string DefaultPort = "5000";
 
-        public Dictionary<string, string> EnvironmentVariables => _serverlessYaml?.Provider?.Environment;
+        public Dictionary<string, string> EnvironmentVariables => _serverlessConfig?.Provider?.Environment;
 
         public readonly IDictionary DefaultEnvironmentVariables =
             Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
 
-        public string Port => _serverlessYaml?.Custom?.LocalDevPort ?? DefaultPort;
+        public string Port => _serverlessConfig?.Custom?.LocalDevPort ?? DefaultPort;
 
         public ServerlessProject(string path = null)
         {
             _path = path ?? Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             Export();
             _serverlessJson = ReadServerlessJson();
-            _serverlessYaml = _serverlessJson.ToObject<ServerlessYaml>();
+            _serverlessConfig = _serverlessJson.ToObject<ServerlessConfig>();
         }
 
         private JObject ReadServerlessJson()
@@ -41,23 +40,21 @@ namespace Kalarrs.Serverless.NetCore.Core
             return JObject.Parse(serverlessJson);
         }
 
-        public IEnumerable<HttpEvent> GetHttpEvents()
+        public IEnumerable<HttpConfig> GetHttpConfigs()
         {
-            var httpEvents = new List<HttpEvent>();
+            var httpConfigs = new List<HttpConfig>();
 
-            var functions = _serverlessYaml?.Functions;
-            if (functions == null) return httpEvents;
+            var functions = _serverlessConfig?.Functions;
+            if (functions == null) return httpConfigs;
 
 
             foreach (var funtionKeyValue in functions)
             {
                 var function = funtionKeyValue.Value;
-                if (function == null) continue;
-
-                var handlerName = function.Handler;
+                if (function.Handler == null) continue;
 
                 var events = function.Events;
-                if (handlerName == null || events == null) continue;
+                if (function.Handler == null || events == null) continue;
 
                 foreach (var @event in events)
                 {
@@ -67,11 +64,12 @@ namespace Kalarrs.Serverless.NetCore.Core
 
                     if (http != null)
                     {
-                        httpEvents.Add(new HttpEvent()
+                        httpConfigs.Add(new HttpConfig()
                         {
-                            Handler = HandlerRegex.Replace(handlerName, "$1"),
+                            EventType = EventType.Http,
+                            Hander = function.Handler,
                             Environment = function.Environment,
-                            Method = http.Method?.ToUpperInvariant(),
+                            Method = http.Method,
                             Path = http.Path == null ? null : RoutePrefixSuffixRegex.Replace(http.Path, ""),
                             Cors = http.Cors
                         });
@@ -79,11 +77,21 @@ namespace Kalarrs.Serverless.NetCore.Core
 
                     if (schedule != null)
                     {
+                        httpConfigs.Add(new HttpConfig()
+                        {
+                            EventType = EventType.Schedule,
+                            Hander = function.Handler,
+                            Environment = function.Environment,
+                            Method = HttpMethod.Get,
+                            Path = $"{funtionKeyValue.Key}/{(_serverlessConfig.Custom.LocalDevScheduleShowLocalTime ? schedule.Meta.Local : schedule.Meta.Utc)}",
+                            Cors = true,
+                            RequestBody = schedule.Input
+                        });
                     }
                 }
             }
 
-            return httpEvents;
+            return httpConfigs;
         }
 
         private void Export()
@@ -102,48 +110,5 @@ namespace Kalarrs.Serverless.NetCore.Core
             process.Start();
             process.WaitForExit();
         }
-    }
-
-    public class ServerlessYaml
-    {
-        public string Service { get; set; }
-        public ServerlessYamlProvider Provider { get; set; }
-        public ServerlessYamlCustom Custom { get; set; }
-        public Dictionary<string, ServerlessYamlFunction> Functions { get; set; }
-    }
-
-    public class ServerlessYamlProvider
-    {
-        public string Stage { get; set; }
-        public string Region { get; set; }
-        public string Name { get; set; }
-        public string Runtime { get; set; }
-        public Dictionary<string, string> Environment { get; set; }
-        public bool? VersionFunctions { get; set; }
-    }
-
-    public class ServerlessYamlCustom
-    {
-        public string LocalDevPort { get; set; }
-    }
-
-    public class ServerlessYamlFunction
-    {
-        public string Handler { get; set; }
-        public List<ServerlessYamlFunctionHttpEvent> Events { get; set; }
-        public Dictionary<string, string> Environment { get; set; }
-    }
-
-    public class ServerlessYamlFunctionHttpEvent
-    {
-        public ServerlessYamlFunctionHttpEventHttp Http { get; set; }
-        public JObject Schedule { get; set; }
-    }
-
-    public class ServerlessYamlFunctionHttpEventHttp
-    {
-        public string Method { get; set; }
-        public string Path { get; set; }
-        public bool Cors { get; set; }
     }
 }

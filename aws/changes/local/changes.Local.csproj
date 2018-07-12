@@ -6,15 +6,13 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.TestUtilities" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.4" />
-    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="2.0.1" />
-    <PackageReference Include="YamlDotNet" Version="4.3.2-pre0479" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Kalarrs.NetCore.Util\Kalarrs.NetCore.Util.csproj" />
     <ProjectReference Include="..\src\changes.csproj" />
   </ItemGroup>
 </Project>

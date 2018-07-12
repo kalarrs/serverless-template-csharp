@@ -1,7 +1,8 @@
-service: "change-name"
+service: "basic-crud-api-csharp"
 
 plugins:
  - "@kalarrs/serverless-project-utils"
+ - "@kalarrs/serverless-shared-api-gateway"
 
 provider:
   name: aws
@@ -24,7 +25,7 @@ functions:
     events:
       - http:
           method: get
-          path: changes
+          path: csharp/changes
           cors: true
 
   # create
@@ -33,7 +34,7 @@ functions:
     events:
       - http:
           method: post
-          path: changes
+          path: csharp/changes
           cors: true
 
   # put
@@ -42,7 +43,7 @@ functions:
     events:
       - http:
           method: put
-          path: changes/{changeId}
+          path: csharp/changes/{changeId}
           cors: true
 
   # delete
@@ -51,9 +52,9 @@ functions:
     events:
       - http:
           method: delete
-          path: changes/{changeId}
+          path: csharp/changes/{changeId}
           cors: true
 
 custom:
   user: ${file(../serverless.yml):custom.user}
-  localDevPort: 5005
+  localDevPort: 5010

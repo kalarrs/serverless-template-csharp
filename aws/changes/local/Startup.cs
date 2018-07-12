@@ -1,5 +1,6 @@
-﻿using Kalarrs.Serverless.NetCore.Util;
-using Kalarrs.Serverless.NetCore.Yaml;
+﻿using System;
+using Kalarrs.NetCore.Util;
+using Kalarrs.NetCore.Util.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -10,6 +11,8 @@ namespace Kalarrs.Sreverless.NetCore
 {
     public class Startup<T> where T : new()
     {
+        public static ServerlessProject ServerlessProject { get; set; }
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -19,17 +22,15 @@ namespace Kalarrs.Sreverless.NetCore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            if (ServerlessProject == null) throw new Exception("Startup Failed! Please create and store an instance of ServerlessProject on Startup<T>.ServerlessProject");
+            services.AddSingleton(ServerlessProject);
             services.AddRouting();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ServerlessProject serverlessProject)
         {
             var routeBuilder = new RouteBuilder(app);
-
-            var parser = new Parser();
-            var httpEvents = parser.GetHttpEvents();
-            var port = parser.GetPort();
-            routeBuilder.AddRoutes<T>(httpEvents, port);
+            routeBuilder.AddRoutes<T>(serverlessProject);
 
             var routes = routeBuilder.Build();
             app.UseRouter(routes);

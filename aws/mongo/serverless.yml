@@ -1,7 +1,8 @@
-service: mongo
+service: "mongo-api-csharp"
 
 plugins:
  - "@kalarrs/serverless-project-utils"
+ - "@kalarrs/serverless-shared-api-gateway"
 
 provider:
   name: aws
@@ -23,25 +24,49 @@ package:
 functions:
   # list
   getUserGroups:
-    handler: CsharpHandlers::changes.Handler::GetUserGroups
+    handler: CsharpHandlers::mongo.Handler::GetUserGroups
+    timeout: 30
     events:
       - http:
           method: get
-          path: user-groups
+          path: csharp/user-groups
           cors: true
 
   # create
   postChanges:
-    handler: CsharpHandlers::changes.Handler::PostUserGroups
+    handler: CsharpHandlers::mongo.Handler::PostUserGroups
+    timeout: 30
     events:
       - http:
           method: post
-          path: user-groups
+          path: csharp/user-groups
           cors: true
+          
+  # referential integrity
+  
+  referentialIntegrity:
+    handler: CsharpHandlers::mongo.Handler::ReferentialIntegrityUserGroups
+    timeout: 60
+    events:
+      - schedule: rate(1 day)
+
+  test:
+    handler: CsharpHandlers::mongo.Handler::Schedule
+    timeout: 60
+    events:
+      - schedule:
+          rate: cron(0 10 * * ? *)
+          enabled: false
+          input:
+            key1: value1
+            key2: value2
+            stageParams:
+              stage: dev
+              
 #
 #  # put
 #  putChanges:
-#    handler: CsharpHandlers::changes.Handler::PutChange
+#    handler: CsharpHandlers::mongo.Handler::PutChange
 #    events:
 #      - http:
 #          method: put
@@ -50,7 +75,7 @@ functions:
 #
 #  # delete
 #  deleteChanges:
-#    handler: CsharpHandlers::changes.Handler::DeleteChange
+#    handler: CsharpHandlers::mongo.Handler::DeleteChange
 #    events:
 #      - http:
 #          method: delete
@@ -59,4 +84,4 @@ functions:
 
 custom:
   user: ${file(../serverless.yml):custom.user}
-  localDevPort: 5005
+  localDevPort: 5011

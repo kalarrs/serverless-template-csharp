@@ -15,8 +15,8 @@ using Newtonsoft.Json.Serialization;
 namespace changes
 {
     public class Handler
-    {   
-        private List<Change> Changes = new List<Change>
+    {
+        private static readonly List<Change> Changes = new List<Change>
         {
             new Change
             {
@@ -32,11 +32,11 @@ namespace changes
 
 
         /// <summary>
-        /// A Lambda function to respond to HTTP Get /api/changes
+        /// A Lambda function to respond to HTTP GET /csharp/changes
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>The list changes</returns>
-        public APIGatewayProxyResponse GetChanges(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <returns>The list of changes</returns>
+        public static APIGatewayProxyResponse GetChanges(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Get Changes\n");
 
@@ -51,7 +51,12 @@ namespace changes
             };
         }
 
-        public APIGatewayProxyResponse PostChanges(APIGatewayProxyRequest request, ILambdaContext context)
+        /// <summary>
+        /// A Lambda function to respond to HTTP POST /csharp/changes
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>A new change</returns>
+        public static APIGatewayProxyResponse PostChanges(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Post Changes\n");
 
@@ -111,8 +116,13 @@ namespace changes
                 };
             }
         }
-        
-        public APIGatewayProxyResponse PutChange(APIGatewayProxyRequest request, ILambdaContext context)
+
+        /// <summary>
+        /// A Lambda function to respond to HTTP PUT /csharp/changes/{changeId}
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>An updated change</returns>
+        public static APIGatewayProxyResponse PutChange(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Put Change\n");
 
@@ -171,14 +181,20 @@ namespace changes
                 };
             }
         }
-        
-        public APIGatewayProxyResponse DeleteChange(APIGatewayProxyRequest request, ILambdaContext context)
+
+        /// <summary>
+        /// A Lambda function to respond to HTTP DELETE /csharp/changes/{changeId}
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>An updated change</returns>
+        public static APIGatewayProxyResponse DeleteChange(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Delete Change\n");
 
             try
             {
-                if (!request.PathParameters.ContainsKey("changeId")) throw new JsonSerializationException("Id is required");
+                if (!request.PathParameters.ContainsKey("changeId"))
+                    throw new JsonSerializationException("Id is required");
 
                 var change = Changes.FirstOrDefault(c => c.Id == ObjectId.Parse(request.PathParameters["changeId"]));
                 if (change == null)
@@ -240,7 +256,7 @@ namespace changes
                 {"Access-Control-Allow-Origin", "*"}, // Required for CORS support to work
                 {"Access-Control-Allow-Credentials", "true"},
             };
-        
+
         public class ObjectIdConverter : JsonConverter
         {
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
