@@ -7,18 +7,6 @@
     <e p="$USER_HOME$/Library/Caches/Rider2018.1/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_aws.-2138514882.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p=".env/dev.yml" t="Include" />
-      <e p="Amazon.Lambda.ScheduledEvents" t="IncludeRecursive">
-        <e p="Amazon.Lambda.ScheduledEvents.csproj" t="IncludeRecursive" />
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netcoreapp2.0" t="Include">
-              <e p="Amazon.Lambda.ScheduledEvents.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-        <e p="ScheduledEvent.cs" t="Include" />
-      </e>
       <e p="aws" t="Include">
         <e p=".env" t="Include" />
       </e>
@@ -160,6 +148,48 @@
       <e p="packages" t="ExcludeRecursive" />
       <e p="serverless-user.yml" t="Include" />
       <e p="serverless.yml" t="Include" />
+    </e>
+    <e p="$PROJECT_DIR$/../../../../aws-lambda-dotnet/Libraries/src/Amazon.Lambda.CloudWatchEvents" t="IncludeRecursive">
+      <e p="Amazon.Lambda.CloudWatchEvents.csproj" t="IncludeRecursive" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="ICloudWatchEvent.cs" t="Include" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netstandard1.3" t="Include">
+            <e p="Amazon.Lambda.CloudWatchEvents.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+    </e>
+    <e p="$PROJECT_DIR$/../../../../aws-lambda-dotnet/Libraries/src/Amazon.Lambda.ECSEvents" t="IncludeRecursive">
+      <e p="Amazon.Lambda.ECSEvents.csproj" t="IncludeRecursive" />
+      <e p="Attribute.cs" t="Include" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="Container.cs" t="Include" />
+      <e p="Detail.cs" t="Include" />
+      <e p="ECSEvent.cs" t="Include" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netstandard1.3" t="Include">
+            <e p="Amazon.Lambda.ECSEvents.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Resource.cs" t="Include" />
+      <e p="VersionInfo.cs" t="Include" />
+    </e>
+    <e p="$PROJECT_DIR$/../../../../aws-lambda-dotnet/Libraries/src/Amazon.Lambda.ScheduledEvents" t="IncludeRecursive">
+      <e p="Amazon.Lambda.ScheduledEvents.csproj" t="IncludeRecursive" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="Detail.cs" t="Include" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netstandard1.3" t="Include">
+            <e p="Amazon.Lambda.ScheduledEvents.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="ScheduledEvent.cs" t="Include" />
     </e>
   </component>
 </project>

@@ -25,7 +25,4 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.1" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Amazon.Lambda.ScheduledEvents\Amazon.Lambda.ScheduledEvents.csproj" />
-  </ItemGroup>
 </Project>

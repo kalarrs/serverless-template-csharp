@@ -22,7 +22,4 @@
       <Link>serverless.yml</Link>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Amazon.Lambda.ScheduledEvents\Amazon.Lambda.ScheduledEvents.csproj" />
-  </ItemGroup>
 </Project>
