@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Amazon.Lambda.ScheduledEvents;
+using Kalarrs.Lambda.ScheduledEvents;
 using Amazon.Lambda.TestUtilities;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;

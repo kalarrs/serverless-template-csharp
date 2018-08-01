@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using Amazon.Lambda.ScheduledEvents;
+using Kalarrs.Lambda.ScheduledEvents;
 using mongo.models;
 using mongo.models.mongo;
 using mongo.models.requests;
@@ -17,7 +17,7 @@ using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
+[assembly: LambdaSerializer(typeof(Kalarrs.Lambda.Serialization.Json.JsonSerializer))]
 
 namespace mongo
 {
