@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -129,6 +130,9 @@ namespace mongo
             
             Console.WriteLine("Event Object:");
             Console.WriteLine(JsonConvert.SerializeObject(@event));
+            
+            var jsonSerializer = new Kalarrs.Lambda.Serialization.Json.JsonSerializer();
+            jsonSerializer.Serialize(@event, Stream.Null);
             
             var userToUserGroupsBson = await UserGroupsCollection.Aggregate()
                 .Match(u => u.Members.Count > 0)
