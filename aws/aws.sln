@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "basic-crud", "basic-crud", "{FDCEFB80-54ED-47C9-8B05-A398ABD7D717}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "changes", "changes\src\changes.csproj", "{F3A12841-A81E-4151-95F3-2ACB61A19664}"
@@ -17,17 +18,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mongo.Tests", "mongo\test\mongo.Tests.csproj", "{0EA2B49C-74A3-4F92-93FE-0D684934AC0D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aws", "aws", "{C84AE16B-FCD2-4E22-9495-7F98E29B634C}"
-ProjectSection(SolutionItems) = preProject
-	serverless-user.yml = serverless-user.yml
-	serverless.yml = serverless.yml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		serverless-user.yml = serverless-user.yml
+		serverless.yml = serverless.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".env", ".env", "{D2EF7783-C384-415F-BB1D-217CF58F8A48}"
-ProjectSection(SolutionItems) = preProject
-	.env\dev.yml = .env\dev.yml
-EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalarrs.NetCore.Util", "Kalarrs.NetCore.Util\Kalarrs.NetCore.Util.csproj", "{EFAA991F-BD2F-4974-86EE-FF5E4946E3D9}"
+	ProjectSection(SolutionItems) = preProject
+		.env\dev.yml = .env\dev.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +58,6 @@ Global
 		{0EA2B49C-74A3-4F92-93FE-0D684934AC0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EA2B49C-74A3-4F92-93FE-0D684934AC0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EA2B49C-74A3-4F92-93FE-0D684934AC0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFAA991F-BD2F-4974-86EE-FF5E4946E3D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFAA991F-BD2F-4974-86EE-FF5E4946E3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFAA991F-BD2F-4974-86EE-FF5E4946E3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFAA991F-BD2F-4974-86EE-FF5E4946E3D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F3A12841-A81E-4151-95F3-2ACB61A19664} = {FDCEFB80-54ED-47C9-8B05-A398ABD7D717}

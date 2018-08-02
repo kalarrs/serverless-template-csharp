@@ -23,7 +23,6 @@
             </e>
           </e>
         </e>
-        <e p="Startup.cs" t="Include" />
         <e p="web.config" t="Include" />
       </e>
       <e p="changes/package.json" t="Include" />
@@ -53,40 +52,6 @@
           </e>
         </e>
       </e>
-      <e p="Kalarrs.NetCore.Util" t="IncludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="EnvironmentVariable.cs" t="Include" />
-        <e p="EventType.cs" t="Include" />
-        <e p="Extensions" t="Include">
-          <e p="HttpContextExtension.cs" t="Include" />
-          <e p="RouteBuilderExtension.cs" t="Include" />
-        </e>
-        <e p="HttpConfig.cs" t="Include" />
-        <e p="HttpMethod.cs" t="Include" />
-        <e p="Kalarrs.NetCore.Util.csproj" t="IncludeRecursive" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netcoreapp2.0" t="Include">
-              <e p="Kalarrs.NetCore.Util.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-        <e p="RequestDelegates" t="Include">
-          <e p="ApiGateway.cs" t="Include" />
-          <e p="Schedule.cs" t="Include" />
-        </e>
-        <e p="ServerlessConfigs" t="Include">
-          <e p="Custom.cs" t="Include" />
-          <e p="Function.cs" t="Include" />
-          <e p="FunctionEvent.cs" t="Include" />
-          <e p="HttpEvent.cs" t="Include" />
-          <e p="Provider.cs" t="Include" />
-          <e p="ScheduleEvent.cs" t="Include" />
-          <e p="ScheduleEventMeta.cs" t="Include" />
-          <e p="ServerlessConfig.cs" t="Include" />
-        </e>
-        <e p="ServerlessProject.cs" t="Include" />
-      </e>
       <e p="mongo" t="Include">
         <e p="local" t="IncludeRecursive">
           <e p="bin" t="ExcludeRecursive" />
@@ -99,7 +64,6 @@
               </e>
             </e>
           </e>
-          <e p="Startup.cs" t="Include" />
           <e p="web.config" t="Include" />
         </e>
         <e p="package.json" t="Include" />

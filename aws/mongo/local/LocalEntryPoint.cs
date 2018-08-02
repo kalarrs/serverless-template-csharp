@@ -1,5 +1,4 @@
-﻿using Kalarrs.NetCore.Util;
-using Kalarrs.Sreverless.NetCore;
+﻿using Kalarrs.Serverless.NetCore.Util;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
