@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "@kalarrs/serverless-domain-manager": "^2.4.0",
-    "@kalarrs/serverless-shared-api-gateway": "^1.0.7",
-    "@kalarrs/serverless-workspace-utils": "^1.0.0",
-    "serverless": "^1.26.1"
-  }
-}
