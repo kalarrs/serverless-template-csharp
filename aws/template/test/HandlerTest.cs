@@ -2,7 +2,7 @@ using Xunit;
 using Amazon.Lambda.TestUtilities;
 using Amazon.Lambda.APIGatewayEvents;
 
-namespace demo.Tests
+namespace template.Test
 {
     public class HandlerTest
     {

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "demo", "src\template.csproj", "{78C5BE91-A4D5-4E1C-AFA3-3EBE76F292D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "template", "src\template.csproj", "{78C5BE91-A4D5-4E1C-AFA3-3EBE76F292D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "template.Test", "test\template.Test.csproj", "{84F7865B-973E-4269-9C9F-5E5100256BD7}"
 EndProject

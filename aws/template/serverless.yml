@@ -1,4 +1,4 @@
-service: "demo"
+service: "template"
 
 plugins:
  - "@kalarrs/serverless-project-utils"
@@ -20,7 +20,7 @@ package:
 
 functions:
 #  get:
-#    handler: CsharpHandlers::changes.Handler::Get
+#    handler: CsharpHandlers::template.Handler::Get
 #    events:
 #      - http:
 #          method: get

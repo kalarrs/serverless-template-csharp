@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "changes.Local": {
+    "template.Local": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
