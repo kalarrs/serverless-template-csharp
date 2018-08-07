@@ -23,6 +23,9 @@
             </e>
           </e>
         </e>
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
         <e p="web.config" t="Include" />
       </e>
       <e p="changes/package.json" t="Include" />
