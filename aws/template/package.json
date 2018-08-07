@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@kalarrs/serverless-project-utils": "^2.2.0",
+    "@kalarrs/serverless-shared-api-gateway": "^1.0.8"
+  }
+}

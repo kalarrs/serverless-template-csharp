@@ -1,0 +1,13 @@
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Serverless Framework
+.serverless
+node_modules
