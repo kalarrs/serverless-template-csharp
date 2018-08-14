@@ -4,7 +4,7 @@
     <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
     <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
     <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
-    <e p="$USER_HOME$/Library/Caches/Rider2017.3/resharper-host/local/Transient/ReSharperHost/v11/SolutionCaches/_changes.-1987992207.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2018.1/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_changes.1749793464.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="changes.sln" t="IncludeFlat" />
       <e p="local" t="IncludeRecursive">
@@ -18,12 +18,9 @@
             </e>
           </e>
         </e>
-        <e p="Serverless.cs" t="Include" />
-        <e p="Startup.cs" t="Include" />
-        <e p="Util.cs" t="Include" />
         <e p="web.config" t="Include" />
-        <e p="Yaml.cs" t="Include" />
       </e>
+      <e p="package.json" t="Include" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="serverless.yml" t="Include" />
       <e p="src" t="IncludeRecursive">

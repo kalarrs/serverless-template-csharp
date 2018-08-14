@@ -3,7 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace mongo.Local
+namespace template.Local
 {
     public static class LocalEntryPoint
     {

@@ -1,0 +1,29 @@
+{
+  "author": "Kalarrs Topham",
+  "classifications": [
+    "Serverless"
+  ],
+  "name": "@kalarrs AWS lambda",
+  "identity": "Kalarrs.AWS.Csharp",
+  "shortName": "kalarrsaws",
+  "tags": {
+    "language": "C#"
+  },
+  "sourceName": "template",
+  "preferNameDirectory": "false",
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**",
+            ".idea/**",
+            ".serverless/**",
+            ".vs/**",
+            "node_modules/**"
+          ]
+        }
+      ]
+    }
+  ]
+}

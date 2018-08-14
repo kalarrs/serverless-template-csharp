@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
   <ItemGroup>
@@ -13,6 +13,6 @@
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\mongo.csproj" />
+    <ProjectReference Include="..\src\template.csproj" />
   </ItemGroup>
 </Project>
