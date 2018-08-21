@@ -1,8 +1,10 @@
-service: "template"
+service: 
+  "template"
 
 plugins:
  - "@kalarrs/serverless-project-utils"
- - "@kalarrs/serverless-shared-api-gateway"
+# - "@kalarrs/serverless-shared-api-gateway"
+ - serverless-dotnet
 
 provider:
   name: aws
@@ -10,23 +12,23 @@ provider:
   profile: ${file(../serverless.yml):provider.profile}
   region: ${file(../serverless.yml):provider.region}
   stage: ${file(../serverless.yml):provider.stage}
-  apiGatewayRestApiName: ${file(../serverless.yml):provider.apiGatewayRestApiName}
+#  apiGatewayRestApiName: ${file(../serverless.yml):provider.apiGatewayRestApiName}
   
   environment:
 #    FOO: ${env:FOO, file(../serverless.yml):provider.environment.FOO}
 
-package:
-  artifact: src/bin/release/netcoreapp2.1/deploy-package.zip
-
 functions:
-#  get:
-#    handler: CsharpHandlers::template.Handler::Get
+  get:
+    handler: CsharpHandlers::template.Handler::Get
 #    events:
 #      - http:
 #          method: get
 #          path: path
 #          cors: true
+#      - schedule: rate(10 minutes)
 
 custom:
   user: ${file(../serverless.yml):custom.user}
   localDevPort: 5010
+  dotnet:
+    slndir: src
