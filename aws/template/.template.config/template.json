@@ -16,6 +16,7 @@
       "modifiers": [
         {
           "exclude": [
+            ".DS_Store",
             ".git/**",
             ".idea/**",
             ".serverless/**",
